@@ -24,7 +24,7 @@
     
     Бэкенд и данные:
     
-        Язык: Python (FastAPI для API)
+        Язык: Python (FastAPI для API и панели админа)
     
         База данных: SQL Lite
     
