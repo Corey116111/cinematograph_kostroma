@@ -15,17 +15,15 @@
         android:paddingBottom="125dp"
         android:orientation="vertical">
 
-        <ImageButton
+        <ImageView
             android:id="@+id/startButton"
-            android:layout_width="206dp"
-            android:layout_height="57dp"
-            android:adjustViewBounds="true"
-            android:background="@drawable/circleandnobackgr"
-            android:onClick="GoToStartNovella"
-            android:scaleType="centerCrop"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:layout_gravity="center"
-            app:srcCompat="@drawable/start_button"
-            tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
+            android:layout_marginBottom="70dp"
+            android:onClick="GoToStartNovella"
+            app:srcCompat="@drawable/button_in_start"
+            tools:ignore="SpeakableTextPresentCheck" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
