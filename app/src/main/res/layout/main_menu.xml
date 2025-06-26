@@ -60,6 +60,7 @@
                 android:layout_height="match_parent"
                 android:padding="15dp"
                 android:scaleType="centerInside"
+                android:id="@+id/gorkiy"
                 android:src="@drawable/gorkiy_lock" />
         </TableRow>
 
@@ -74,6 +75,7 @@
                 android:layout_height="match_parent"
                 android:padding="15dp"
                 android:scaleType="centerInside"
+                android:id="@+id/romans"
                 android:src="@drawable/romans_lock" />
         </TableRow>
 
@@ -88,6 +90,7 @@
                 android:layout_height="match_parent"
                 android:padding="15dp"
                 android:scaleType="centerInside"
+                android:id="@+id/evil_people"
                 android:src="@drawable/evil_people_lock" />
         </TableRow>
 
@@ -99,9 +102,12 @@
 
             <ImageView
                 android:layout_width="wrap_content"
+                android:id="@+id/finally_quest"
                 android:layout_height="match_parent"
                 android:padding="15dp"
                 android:scaleType="centerInside"
+                android:onClick="finally_quest_click"
+                android:focusable="true"
                 android:src="@drawable/finally_lock" />
         </TableRow>
     </TableLayout>
