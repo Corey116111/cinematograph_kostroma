@@ -1,4 +1,4 @@
-package com.example.intensiv;
+package com.example.intensiv2;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
