@@ -38,6 +38,14 @@
             android:contentDescription="Иконка ачивок"
             android:scaleType="fitCenter"
             android:src="@drawable/achievement" />
+
+        <Button
+            android:id="@+id/test_locked"
+            android:onClick="unlockQuest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Прошел" />
     </LinearLayout>
 
     <TableLayout
@@ -50,8 +58,8 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
             android:layout_weight="1"
             android:gravity="center">
 
@@ -65,8 +73,8 @@
         </TableRow>
 
         <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
             android:layout_weight="1"
             android:gravity="center">
 
@@ -80,8 +88,8 @@
         </TableRow>
 
         <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
             android:layout_weight="1"
             android:gravity="center">
 
@@ -95,20 +103,21 @@
         </TableRow>
 
         <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
             android:layout_weight="1"
             android:gravity="center">
 
             <ImageView
-                android:layout_width="wrap_content"
                 android:id="@+id/finally_quest"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:focusable="true"
+                android:onClick="finally_quest_click"
                 android:padding="15dp"
                 android:scaleType="centerInside"
-                android:onClick="finally_quest_click"
-                android:focusable="true"
-                android:src="@drawable/finally_lock" />
+                android:src="@drawable/finally_lock"
+                tools:ignore="SpeakableTextPresentCheck" />
         </TableRow>
     </TableLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

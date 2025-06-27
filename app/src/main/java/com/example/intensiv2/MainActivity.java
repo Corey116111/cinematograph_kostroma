@@ -1,30 +1,32 @@
 package com.example.intensiv2;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+{
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         enableFullscreen();
         setContentView(R.layout.activity_main);
-
-       // ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-           // WindowInsetsCompat systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-           // v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-           // return insets;
-       // });
     }
 
     /// убираем шторку и кнопки телефона, полноэкранный режим
-    private void enableFullscreen() {
+    private void enableFullscreen()
+    {
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY |
                         View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
@@ -37,17 +39,55 @@ public class MainActivity extends AppCompatActivity {
 
     /// Если выйти из приложения, режим сохранится
     @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
+    public void onWindowFocusChanged(boolean hasFocus)
+    {
         super.onWindowFocusChanged(hasFocus);
-        if (hasFocus) {
+        if (hasFocus)
+        {
             enableFullscreen();
         }
     }
 
     /// Идем к новелле перед меню
-    public void GoToStartNovella(View view) {
-        Intent intent = new Intent(this, HistoryBeforeMenu.class);
-        startActivity(intent);
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+    public void GoToStartNovella(final View button)
+    {
+        button.setEnabled(false);
+
+        final View blackOverlay = findViewById(R.id.blackOverlay);
+
+        ValueAnimator fadeAnimator = ValueAnimator.ofFloat(0f, 1f);
+        fadeAnimator.setDuration(3000); // 3 секунды
+        fadeAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener()
+        {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation)
+            {
+                float alpha = (float) animation.getAnimatedValue();
+                button.setAlpha(1f - alpha);
+                blackOverlay.setAlpha(alpha);
+            }
+        });
+
+        fadeAnimator.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation) {}
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                Intent intent = new Intent(MainActivity.this, HistoryBeforeMenu.class);
+                startActivity(intent);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {}
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {}
+        });
+
+        fadeAnimator.start();
     }
 }
