@@ -26,6 +26,12 @@
         <activity
             android:name=".main_menu_activity"
             android:exported="false" />
+        <activity
+            android:name=".FinallyWindowQuest"
+            android:exported="false" />
+        <activity
+            android:name=".achievement_activity"
+            android:exported="false" />
     </application>
 
 </manifest>
