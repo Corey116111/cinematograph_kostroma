@@ -35,6 +35,12 @@ public class main_menu_activity extends AppCompatActivity {
         updateQuestImages();
     }
 
+    public void goToAchievement(View v)
+    {
+        Intent intent = new Intent (this, achievement_activity.class);
+        startActivity(intent);
+    }
+
     @Override
     protected void onResume()
     {
