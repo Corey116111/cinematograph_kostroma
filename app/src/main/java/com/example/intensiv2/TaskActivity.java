@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,7 +33,8 @@ public class TaskActivity extends AppCompatActivity {
     private int hintStep = 0;
     private ImageView hintImageView;
     private TextView taskTextView;
-    private Button hintButton, atPlaceButton, menuButton;
+    private ImageButton hintButton;
+    private Button atPlaceButton, menuButton;
     private static final String CORRECT_ANSWER = "7"; //пример правильного ответа для вопроса с колоннами
 
     //пример координат и радиуса
@@ -40,17 +42,11 @@ public class TaskActivity extends AppCompatActivity {
     private final double TARGET_LNG = 37.618423;
     private final float RADIUS_METERS = 20f;
 
-    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_task);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.task_root), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
         hintImageView = findViewById(R.id.hintImageView);
         taskTextView = findViewById(R.id.taskTextView);
@@ -63,6 +59,26 @@ public class TaskActivity extends AppCompatActivity {
         menuButton.setOnClickListener(v -> finish());
 
         checkLocationPermissionAndStart();
+    }
+
+    private void enableFullscreen()
+    {
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY |
+                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+                        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
+                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+                        View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
+                        View.SYSTEM_UI_FLAG_FULLSCREEN
+        );
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            enableFullscreen();
+        }
     }
 
     private void checkLocationPermissionAndStart() {

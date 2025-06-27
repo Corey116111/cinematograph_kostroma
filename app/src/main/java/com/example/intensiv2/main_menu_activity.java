@@ -1,5 +1,6 @@
 package com.example.intensiv2;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -42,6 +43,13 @@ public class main_menu_activity extends AppCompatActivity {
         {
             // здесь код для разблокированного состояния
         }
+    }
+
+    public void gorkiy_click(View v)
+    {
+        Intent intent = new Intent(this, TaskActivity.class);
+        startActivity(intent);
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
     @Override
