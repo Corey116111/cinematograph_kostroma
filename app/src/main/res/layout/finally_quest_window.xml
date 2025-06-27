@@ -67,6 +67,7 @@
             android:layout_weight="3"
             android:clickable="true"
             android:focusable="true"
+            android:onClick="goToMenuFromFinally"
             android:scaleType="centerInside"
             android:src="@drawable/finally_window_back"
             tools:ignore="SpeakableTextPresentCheck" />
@@ -83,6 +84,7 @@
             android:layout_marginLeft="10dp"
             android:layout_weight="3"
             android:clickable="true"
+            android:onClick="get_sertificate"
             android:focusable="true"
             android:paddingRight="10dp"
             android:scaleType="centerInside"

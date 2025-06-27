@@ -1,9 +1,11 @@
 package com.example.intensiv2;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,7 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 public class FinallyWindowQuest extends AppCompatActivity
 {
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         enableFullscreen();
         setContentView(R.layout.finally_quest_window);
@@ -31,10 +34,44 @@ public class FinallyWindowQuest extends AppCompatActivity
     }
 
     @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
+    public void onWindowFocusChanged(boolean hasFocus)
+    {
         super.onWindowFocusChanged(hasFocus);
-        if (hasFocus) {
+        if (hasFocus)
+        {
             enableFullscreen();
         }
+    }
+
+    public void goToMenuFromFinally (View v)
+    {
+        Intent intent = new Intent (this, main_menu_activity.class);
+        startActivity(intent);
+    }
+
+    public void get_sertificate(View v) {
+        EditText nameInput = findViewById(R.id.text_input);
+
+        String name = nameInput.getText().toString().trim(); // получаем имя
+
+        int minLength = 3; // мин длина имени
+
+        if (name.isEmpty()) // если пустое
+        {
+            nameInput.setError("Введите ваше имя!");
+            nameInput.requestFocus();
+            return;
+        }
+
+        if (name.length() < minLength)
+        {
+            nameInput.setError("Имя должно содержать минимум " + minLength + " символа!");
+            nameInput.requestFocus();
+            return;
+        }
+
+        Toast.makeText(this, "Сертификат для " + name + " готов!", Toast.LENGTH_SHORT).show();
+
+        // тут сделать выдачу сертификата в галерею
     }
 }
