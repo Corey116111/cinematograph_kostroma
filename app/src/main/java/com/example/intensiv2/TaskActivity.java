@@ -33,14 +33,10 @@ public class TaskActivity extends AppCompatActivity {
     private int hintStep = 0;
     private ImageView hintImageView;
     private TextView taskTextView;
+    private TextView titleTextView;
     private ImageButton hintButton;
     private Button atPlaceButton, menuButton;
-    private static final String CORRECT_ANSWER = "7"; //пример правильного ответа для вопроса с колоннами
-
-    //пример координат и радиуса
-    private final double TARGET_LAT = 55.751244;
-    private final double TARGET_LNG = 37.618423;
-    private final float RADIUS_METERS = 20f;
+    private TestData currentTest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,17 +44,43 @@ public class TaskActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_task);
 
+        //id теста из Intent
+        int testId = getIntent().getIntExtra(TestConstants.EXTRA_TEST_ID, TestConstants.TEST_GORKIY);
+        currentTest = TestManager.getTest(testId);
+        
+        if (currentTest == null) {
+            Toast.makeText(this, "Тест не найден", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        initializeViews();
+        setupTestData();
+        setupClickListeners();
+        checkLocationPermissionAndStart();
+    }
+
+    private void initializeViews() {
         hintImageView = findViewById(R.id.hintImageView);
         taskTextView = findViewById(R.id.taskTextView);
+        titleTextView = findViewById(R.id.titleTextView);
         hintButton = findViewById(R.id.hintButton);
         atPlaceButton = findViewById(R.id.atPlaceButton);
         menuButton = findViewById(R.id.menuButton);
+    }
 
+    private void setupTestData() {
+        //заголовок
+        titleTextView.setText(currentTest.getTitle());
+        
+        //подсказка
+        updateHint();
+    }
+
+    private void setupClickListeners() {
         hintButton.setOnClickListener(v -> switchHint());
         atPlaceButton.setOnClickListener(v -> showQuestionDialog());
         menuButton.setOnClickListener(v -> finish());
-
-        checkLocationPermissionAndStart();
     }
 
     private void enableFullscreen()
@@ -90,7 +112,7 @@ public class TaskActivity extends AppCompatActivity {
     }
 
     private void startLocationNotifier() {
-        locationNotifier = new LocationNotifier(this, TARGET_LAT, TARGET_LNG, RADIUS_METERS);
+        locationNotifier = new LocationNotifier(this, currentTest.getTargetLat(), currentTest.getTargetLng(), currentTest.getRadiusMeters());
         locationNotifier.start();
     }
 
@@ -107,34 +129,23 @@ public class TaskActivity extends AppCompatActivity {
     }
 
     private void switchHint() {
-        hintStep = (hintStep + 1) % 4;
-        switch (hintStep) {
-            case 0:
-                //искаженный кадр 
-                hintImageView.setImageResource(R.drawable.example);
-                taskTextView.setText("Найдите это место");
-                break;
-            case 1:
-                //оригинальный кадр (пример)
-                hintImageView.setImageResource(R.drawable.example);
-                taskTextView.setText("Оригинальный кадр");
-                break;
-            case 2:
-                //видеофрагмент (заглушка, можно добавить VideoView)
-                hintImageView.setImageResource(R.drawable.example);
-                taskTextView.setText("Видеофрагмент (заглушка |_|)");
-                break;
-            case 3:
-                //текстовая подсказка (заглушка)
-                hintImageView.setImageResource(R.drawable.example);
-                taskTextView.setText("Текстовая подсказка: ...");
-                break;
-        }
+        hintStep = (hintStep + 1) % currentTest.getHintImages().length;
+        updateHint();
+    }
+
+    private void updateHint() {
+        //устанавливаем изображение
+        int imageResourceId = TestManager.getDrawableResourceId(currentTest.getHintImages()[hintStep]);
+        hintImageView.setImageResource(imageResourceId);
+        
+        //устанавливаем текст
+        taskTextView.setText(currentTest.getHintTexts()[hintStep]);
     }
 
     private void showQuestionDialog() {
         FragmentManager fm = getSupportFragmentManager();
-        new QuestionDialog().show(fm, "question_dialog");
+        QuestionDialog dialog = QuestionDialog.newInstance(currentTest.getQuestion(), currentTest.getCorrectAnswer());
+        dialog.show(fm, "question_dialog");
     }
 
     private void showErrorDialog() {
@@ -143,21 +154,33 @@ public class TaskActivity extends AppCompatActivity {
     }
 
     public static class QuestionDialog extends DialogFragment {
+        private static final String ARG_QUESTION = "question";
+        private static final String ARG_CORRECT_ANSWER = "correct_answer";
+
+        public static QuestionDialog newInstance(String question, String correctAnswer) {
+            QuestionDialog dialog = new QuestionDialog();
+            Bundle args = new Bundle();
+            args.putString(ARG_QUESTION, question);
+            args.putString(ARG_CORRECT_ANSWER, correctAnswer);
+            dialog.setArguments(args);
+            return dialog;
+        }
+
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
+            String question = getArguments().getString(ARG_QUESTION, "Вопрос");
+            String correctAnswer = getArguments().getString(ARG_CORRECT_ANSWER, "");
+            
             AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-            LayoutInflater inflater = requireActivity().getLayoutInflater();
-            View view = inflater.inflate(android.R.layout.simple_list_item_2, null);
-            //кастомный layout для вопроса
-            View customView = inflater.inflate(android.R.layout.simple_list_item_2, null);
             EditText input = new EditText(getContext());
             input.setInputType(InputType.TYPE_CLASS_TEXT);
             input.setHint("Введите ответ");
-            builder.setTitle("Сколько колонн у беседки?")
+            
+            builder.setTitle(question)
                     .setView(input)
                     .setPositiveButton("ПРОВЕРИТЬ", (dialog, which) -> {
                         String answer = input.getText().toString().trim();
-                        if (CORRECT_ANSWER.equals(answer)) {
+                        if (correctAnswer.equals(answer)) {
                             ((TaskActivity) requireActivity()).onCorrectAnswer();
                         } else {
                             ((TaskActivity) requireActivity()).showErrorDialog();
@@ -180,6 +203,6 @@ public class TaskActivity extends AppCompatActivity {
 
     private void onCorrectAnswer() {
         Toast.makeText(this, "Поздравляем! Вы на месте!", Toast.LENGTH_SHORT).show();
-        // переход к следующему этапу или экрану
+        // успешно
     }
 } 
