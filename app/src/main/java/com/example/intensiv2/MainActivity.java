@@ -3,8 +3,11 @@ package com.example.intensiv2;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.view.SoundEffectConstants;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -48,11 +51,22 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    /// Идем к новелле перед меню
-    public void GoToStartNovella(final View button)
+    private void playCustomClickSound(Context context)
     {
-        button.setEnabled(false);
+            MediaPlayer player = MediaPlayer.create(context, R.raw.click);
+            float volume = 0.5f;
+            player.setVolume(volume, volume);
+            player.setOnCompletionListener(MediaPlayer::release);
+            player.start();
+    }
 
+    /// Идем к новелле перед меню
+    public void GoToStartNovella(View view)
+    {
+        view.setEnabled(false);
+        playCustomClickSound(view.getContext());
+        Animation scaleAnim = AnimationUtils.loadAnimation(this, R.anim.scale_anim);
+        view.startAnimation(scaleAnim);
         final View blackOverlay = findViewById(R.id.blackOverlay);
 
         ValueAnimator fadeAnimator = ValueAnimator.ofFloat(0f, 1f);
@@ -63,7 +77,7 @@ public class MainActivity extends AppCompatActivity
             public void onAnimationUpdate(ValueAnimator animation)
             {
                 float alpha = (float) animation.getAnimatedValue();
-                button.setAlpha(1f - alpha);
+                view.setAlpha(1f - alpha);
                 blackOverlay.setAlpha(alpha);
             }
         });
