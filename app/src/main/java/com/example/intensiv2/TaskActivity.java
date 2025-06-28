@@ -172,24 +172,33 @@ public class TaskActivity extends AppCompatActivity {
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             String question = getArguments().getString(ARG_QUESTION, "Вопрос");
             String correctAnswer = getArguments().getString(ARG_CORRECT_ANSWER, "");
-            
-            AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-            EditText input = new EditText(getContext());
-            input.setInputType(InputType.TYPE_CLASS_TEXT);
-            input.setHint("Введите ответ");
-            
-            builder.setTitle(question)
-                    .setView(input)
-                    .setPositiveButton("ПРОВЕРИТЬ", (dialog, which) -> {
-                        String answer = input.getText().toString().trim();
-                        if (correctAnswer.equals(answer)) {
-                            ((TaskActivity) requireActivity()).onCorrectAnswer();
-                        } else {
-                            ((TaskActivity) requireActivity()).showErrorDialog();
-                        }
-                    })
-                    .setNegativeButton("НАЗАД", (dialog, which) -> dialog.dismiss());
-            return builder.create();
+
+            LayoutInflater inflater = requireActivity().getLayoutInflater();
+            View view = inflater.inflate(R.layout.dialog_question, null);
+
+            TextView questionText = view.findViewById(R.id.dialogQuestionText);
+            EditText answerInput = view.findViewById(R.id.dialogAnswerInput);
+            Button btnCancel = view.findViewById(R.id.dialogCancel);
+            Button btnCheck = view.findViewById(R.id.dialogCheck);
+
+            questionText.setText(question);
+
+            AlertDialog dialog = new AlertDialog.Builder(requireActivity())
+                    .setView(view)
+                    .create();
+
+            btnCancel.setOnClickListener(v -> dialog.dismiss());
+            btnCheck.setOnClickListener(v -> {
+                String answer = answerInput.getText().toString().trim();
+                if (correctAnswer.equals(answer)) {
+                    ((TaskActivity) requireActivity()).onCorrectAnswer();
+                    dialog.dismiss();
+                } else {
+                    ((TaskActivity) requireActivity()).showErrorDialog();
+                }
+            });
+
+            return dialog;
         }
     }
 
