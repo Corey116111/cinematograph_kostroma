@@ -69,7 +69,7 @@ public class TaskActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        hintImageView = findViewById(R.id.hintImageView);
+        //hintImageView = findViewById(R.id.hintImageView);
         taskTextView = findViewById(R.id.taskTextView);
         titleTextView = findViewById(R.id.titleTextView);
         hintButton = findViewById(R.id.hintButton);
@@ -140,7 +140,7 @@ public class TaskActivity extends AppCompatActivity {
 
     private void updateHint() {
         int imageResourceId = TestManager.getDrawableResourceId(currentTest.getHintImages()[hintStep]);
-        hintImageView.setImageResource(imageResourceId);
+        //hintImageView.setImageResource(imageResourceId);
         taskTextView.setText(currentTest.getHintTexts()[hintStep]);
     }
 
