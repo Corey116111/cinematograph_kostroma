@@ -38,6 +38,9 @@
         <activity
             android:name=".achievement_activity"
             android:exported="false" />
+        <activity android:name=".QuestIntroActivity"
+            android:exported="false">
+        </activity>
     </application>
 
 </manifest>

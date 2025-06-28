@@ -9,6 +9,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.content.Intent;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -36,7 +37,9 @@ public class TaskActivity extends AppCompatActivity {
     private TextView titleTextView;
     private ImageButton hintButton;
     private Button atPlaceButton, menuButton;
+    private TestManager.QuestData currentQuest;
     private TestData currentTest;
+    private int currentQuestionIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,15 +47,20 @@ public class TaskActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_task);
 
-        //id теста из Intent
-        int testId = getIntent().getIntExtra(TestConstants.EXTRA_TEST_ID, TestConstants.TEST_GORKIY);
-        currentTest = TestManager.getTest(testId);
-        
-        if (currentTest == null) {
-            Toast.makeText(this, "Тест не найден", Toast.LENGTH_SHORT).show();
+        int questId = getIntent().getIntExtra(TestConstants.EXTRA_TEST_ID, TestConstants.TEST_GORKIY);
+        currentQuest = TestManager.getQuest(questId);
+        if (currentQuest == null || currentQuest.getQuestions().isEmpty()) {
+            Toast.makeText(this, "Квест не найден", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
+        currentQuestionIndex = getIntent().getIntExtra(QuestIntroActivity.EXTRA_QUESTION_INDEX, 0);
+        if (currentQuestionIndex >= currentQuest.getQuestions().size()) {
+            Toast.makeText(this, "Квест завершён!", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+        currentTest = currentQuest.getQuestions().get(currentQuestionIndex);
 
         initializeViews();
         setupTestData();
@@ -70,10 +78,7 @@ public class TaskActivity extends AppCompatActivity {
     }
 
     private void setupTestData() {
-        //заголовок
         titleTextView.setText(currentTest.getTitle());
-        
-        //подсказка
         updateHint();
     }
 
@@ -134,11 +139,8 @@ public class TaskActivity extends AppCompatActivity {
     }
 
     private void updateHint() {
-        //устанавливаем изображение
         int imageResourceId = TestManager.getDrawableResourceId(currentTest.getHintImages()[hintStep]);
         hintImageView.setImageResource(imageResourceId);
-        
-        //устанавливаем текст
         taskTextView.setText(currentTest.getHintTexts()[hintStep]);
     }
 
@@ -202,7 +204,18 @@ public class TaskActivity extends AppCompatActivity {
     }
 
     private void onCorrectAnswer() {
-        Toast.makeText(this, "Поздравляем! Вы на месте!", Toast.LENGTH_SHORT).show();
-        // успешно
+        String bgResName = null;
+        if (currentQuest.getPlaceInfoBgNames() != null && currentQuestionIndex < currentQuest.getPlaceInfoBgNames().size()) {
+            bgResName = currentQuest.getPlaceInfoBgNames().get(currentQuestionIndex);
+        }
+        Intent intent = new Intent(this, QuestIntroActivity.class);
+        intent.putExtra(TestConstants.EXTRA_TEST_ID, getIntent().getIntExtra(TestConstants.EXTRA_TEST_ID, TestConstants.TEST_GORKIY));
+        intent.putExtra(QuestIntroActivity.EXTRA_SCREEN_TYPE, "placeinfo");
+        intent.putExtra(QuestIntroActivity.EXTRA_QUESTION_INDEX, currentQuestionIndex);
+        if (bgResName != null) {
+            intent.putExtra(QuestIntroActivity.EXTRA_BG_RES_NAME, bgResName);
+        }
+        startActivity(intent);
+        finish();
     }
 } 
