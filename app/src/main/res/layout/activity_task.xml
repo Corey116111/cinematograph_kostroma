@@ -5,7 +5,7 @@
     android:id="@+id/task_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F2ED"
+    android:background="@drawable/kalancha"
     tools:context=".TaskActivity">
 
     <!-- Заголовок -->
@@ -18,7 +18,7 @@
         android:textStyle="bold"
         android:textSize="24sp"
         android:gravity="center"
-        android:textColor="#222"
+        android:textColor="#F1EDE2"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -43,7 +43,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="#F1EDE2">
 
             <TextView
                 android:id="@+id/taskTextView"
@@ -53,8 +54,11 @@
                 android:layout_marginStart="25dp"
                 android:layout_marginEnd="25dp"
                 android:gravity="center"
+                android:textStyle="bold"
                 android:text="Как драгоценная реликвия в ладонях, главный символ Костромы покоится на ее гербе"
-                android:textColor="#222"
+                android:fontFamily="@font/RobotoSerif"
+
+                android:textColor="#4c4a4a"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toTopOf="@id/questionTextView"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -69,6 +73,7 @@
                 android:layout_height="wrap_content"
                 android:text="Найдите это место"
                 android:textSize="18sp"
+                android:fontFamily="@font/Roboto"
                 android:textColor="#222"
                 android:gravity="center"
                 app:layout_constraintTop_toBottomOf="@id/taskTextView"
@@ -90,7 +95,6 @@
                 android:layout_margin="8dp"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
-
     <Button
         android:id="@+id/atPlaceButton"
         android:layout_width="0dp"
@@ -100,14 +104,12 @@
         android:textStyle="bold"
         android:backgroundTint="#333"
         android:textColor="#fff"
-        app:layout_constraintTop_toBottomOf="@id/cardView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/menuButton"
-        android:layout_marginTop="16dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        app:layout_constraintHeight_percent="0.08"/>
+        android:layout_marginBottom="8dp"/>
 
     <Button
         android:id="@+id/menuButton"
@@ -118,13 +120,12 @@
         android:backgroundTint="#fff"
         android:textColor="#333"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/atPlaceButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginTop="8dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        app:layout_constraintHeight_percent="0.08"/>
+        android:layout_marginBottom="32dp"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout> 
+
+</androidx.constraintlayout.widget.ConstraintLayout>
