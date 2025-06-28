@@ -21,9 +21,23 @@
             android:layout_height="150dp"
             android:layout_gravity="center"
             android:layout_marginBottom="70dp"
+            android:clickable="true"
+            android:focusable="true"
             android:onClick="GoToStartNovella"
             app:srcCompat="@drawable/button_in_start"
             tools:ignore="SpeakableTextPresentCheck" />
+
     </LinearLayout>
+
+    <View
+        android:id="@+id/blackOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.0"
+        android:background="#000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
