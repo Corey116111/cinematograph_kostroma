@@ -13,13 +13,14 @@ public class TestData implements Serializable {
     private float radiusMeters;
     private int testId;
     private String originalImage;
+    private String disortedImage;
     private String videoUrl;
     private String textHint;
 
 
     public TestData(String title, String[] hintImages, String[] hintTexts, 
                    String question, String correctAnswer, 
-                   double targetLat, double targetLng, float radiusMeters, int testId, String originalImage, String videoUrl, String textHint) {
+                   double targetLat, double targetLng, float radiusMeters, int testId, String originalImage, String disortedImage, String videoUrl, String textHint) {
         this.title = title;
         this.hintImages = hintImages;
         this.hintTexts = hintTexts;
@@ -29,6 +30,7 @@ public class TestData implements Serializable {
         this.targetLng = targetLng;
         this.radiusMeters = radiusMeters;
         this.testId = testId;
+        this.disortedImage = disortedImage;
         this.originalImage = originalImage;
         this.videoUrl = videoUrl;
         this.textHint = textHint;
@@ -44,6 +46,7 @@ public class TestData implements Serializable {
     public double getTargetLng() { return targetLng; }
     public float getRadiusMeters() { return radiusMeters; } //радиус для gps
     public int getTestId() { return testId; } //id
+    public String getDistortedImage() { return disortedImage; }
     public String getOriginalImage() { return originalImage; }
     public String getVideoUrl() { return videoUrl; }
     public String getTextHint() { return textHint; }

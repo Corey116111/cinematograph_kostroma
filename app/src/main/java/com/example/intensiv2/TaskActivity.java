@@ -34,7 +34,10 @@ public class TaskActivity extends AppCompatActivity {
     private static final int LOCATION_PERMISSION_REQUEST = 1001;
     private LocationNotifier locationNotifier;
     private int hintStep = 0;
-    private ImageView hintImageView;
+    private ImageView disortedImageView;
+    private ImageView originalImageView;
+    private VideoView videoView;
+    private TextView textHintView;
     private TextView taskTextView;
     private TextView titleTextView;
     private ImageButton hintButton;
@@ -42,9 +45,6 @@ public class TaskActivity extends AppCompatActivity {
     private TestManager.QuestData currentQuest;
     private TestData currentTest;
     private int currentQuestionIndex = 0;
-    private ImageView originalImageView;
-    private VideoView videoView;
-    private TextView textHintView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,19 +74,20 @@ public class TaskActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        //hintImageView = findViewById(R.id.hintImageView);
-        taskTextView = findViewById(R.id.taskTextView);
+        disortedImageView = findViewById(R.id.disortedImageView);
+        originalImageView = findViewById(R.id.originalImageView);
+        videoView = findViewById(R.id.videoView);
+        textHintView = findViewById(R.id.textHintView);
+        //taskTextView = findViewById(R.id.taskTextView);
         titleTextView = findViewById(R.id.titleTextView);
         hintButton = findViewById(R.id.hintButton);
         atPlaceButton = findViewById(R.id.atPlaceButton);
         menuButton = findViewById(R.id.menuButton);
-        originalImageView = findViewById(R.id.originalImageView);
-        videoView = findViewById(R.id.videoView);
-        textHintView = findViewById(R.id.textHintView);
     }
 
     private void setupTestData() {
         titleTextView.setText(currentTest.getTitle());
+        hintStep = 0;
         updateHint();
     }
 
@@ -147,28 +148,36 @@ public class TaskActivity extends AppCompatActivity {
     }
 
     private void updateHint() {
-        taskTextView.setVisibility(View.GONE);
+        disortedImageView.setVisibility(View.GONE);
         originalImageView.setVisibility(View.GONE);
         videoView.setVisibility(View.GONE);
         textHintView.setVisibility(View.GONE);
+        //taskTextView.setVisibility(View.GONE);
 
         if (hintStep == 0) {
-            taskTextView.setVisibility(View.VISIBLE);
-            taskTextView.setText(currentTest.getHintTexts()[0]);
+            disortedImageView.setVisibility(View.VISIBLE);
+            int resId = TestManager.getDrawableResourceId(currentTest.getDistortedImage());
+            disortedImageView.setImageResource(resId);
         } else if (hintStep == 1) {
             originalImageView.setVisibility(View.VISIBLE);
             int resId = TestManager.getDrawableResourceId(currentTest.getOriginalImage());
             originalImageView.setImageResource(resId);
         } else if (hintStep == 2) {
-            videoView.setVisibility(View.VISIBLE);
-            // Пример для локального видео в raw:
-            // Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/raw/" + currentTest.getVideoUrl());
-            // videoView.setVideoURI(videoUri);
-            // videoView.start();
-            // Для YouTube или внешней ссылки использовать Intent или WebView
-        } else if (hintStep == 3) {
             textHintView.setVisibility(View.VISIBLE);
             textHintView.setText(currentTest.getTextHint());
+        } else if (hintStep == 3) {
+            if(currentTest.getVideoUrl() != null || !currentTest.getVideoUrl().isEmpty()){
+                videoView.setVisibility(View.VISIBLE);
+                Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/raw/" + currentTest.getVideoUrl());
+                videoView.setVideoURI(videoUri);
+                videoView.start();
+                // Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/raw/" + currentTest.getVideoUrl());
+                // videoView.setVideoURI(videoUri);
+                // videoView.start();
+            } else {
+                hintStep = 0;
+                updateHint();
+            }
         }
     }
 

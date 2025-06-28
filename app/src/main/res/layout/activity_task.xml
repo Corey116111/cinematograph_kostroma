@@ -14,6 +14,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="ГОРЬКИЙ 53"
+        android:layout_marginTop="100dp"
         android:fontFamily="@font/roboto"
         android:textStyle="bold"
         android:textSize="24sp"
@@ -38,7 +39,6 @@
         app:layout_constraintTop_toBottomOf="@id/titleTextView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/atPlaceButton"
         app:layout_constraintHeight_percent="0.55">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -46,63 +46,70 @@
             android:layout_height="match_parent"
             android:background="#F1EDE2">
 
-            <TextView
-                android:id="@+id/taskTextView"
+            <!-- Контейнер для подсказок -->
+            <FrameLayout
+                android:id="@+id/hintContainer"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:background="#96939380"
-                android:layout_marginStart="25dp"
-                android:layout_marginEnd="25dp"
-                android:gravity="center"
-                android:textStyle="bold"
-                android:text="Как драгоценная реликвия в ладонях, главный символ Костромы покоится на ее гербе"
-                android:fontFamily="@font/robotoserif"
-
-                android:textColor="#4c4a4a"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toTopOf="@id/questionTextView"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHeight_percent="0.7"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-            <!-- Оригинальный кадр -->
-            <ImageView
-                android:id="@+id/originalImageView"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:scaleType="centerCrop"
-                android:visibility="gone"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/questionTextView"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintHeight_percent="0.55"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp">
 
-            <!-- Видео -->
-            <VideoView
-                android:id="@+id/videoView"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:visibility="gone"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/questionTextView"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                <ImageView
+                    android:id="@+id/disortedImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone"/>
+                <ImageView
+                    android:id="@+id/originalImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone"/>
+                <VideoView
+                    android:id="@+id/videoView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"/>
+                <TextView
+                    android:id="@+id/textHintView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textColor="#444"
+                    android:textSize="18sp"
+                    android:background="#ccc"
+                    android:visibility="gone"/>
+                <TextView
+                    android:id="@+id/taskTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textColor="#4c4a4a"
+                    android:textSize="20sp"
+                    android:background="#96939380"
+                    android:visibility="gone"/>
+            </FrameLayout>
 
-            <!-- Текстовая подсказка -->
-            <TextView
-                android:id="@+id/textHintView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:textColor="#444"
-                android:textSize="18sp"
-                android:gravity="center"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/questionTextView"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+            <!-- Иконка подсказки -->
+            <ImageButton
+                android:id="@+id/hintButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/helper"
+                android:src="@android:drawable/ic_menu_info_details"
+                android:contentDescription="Подсказка"
+                app:layout_constraintTop_toTopOf="@id/hintContainer"
+                app:layout_constraintEnd_toEndOf="@id/hintContainer"
+                android:layout_margin="8dp"/>
 
+            <!-- Текст под контейнером -->
             <TextView
                 android:id="@+id/questionTextView"
                 android:layout_width="0dp"
@@ -112,56 +119,44 @@
                 android:fontFamily="@font/roboto"
                 android:textColor="#222"
                 android:gravity="center"
-                app:layout_constraintTop_toBottomOf="@id/taskTextView"
+                app:layout_constraintTop_toBottomOf="@id/hintContainer"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHeight_percent="0.3"/>
+                android:layout_marginTop="8dp"/>
 
-            <ImageButton
-                android:id="@+id/hintButton"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:background="@drawable/helper"
-                app:circularflow_radiusInDP="50dp"
-                android:src="@android:drawable/ic_menu_info_details"
-                android:contentDescription="Подсказка"
-                app:layout_constraintTop_toTopOf="parent"
+            <!-- Кнопки -->
+            <Button
+                android:id="@+id/atPlaceButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Я НА МЕСТЕ"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:backgroundTint="#333"
+                android:textColor="#fff"
+                app:layout_constraintTop_toBottomOf="@id/questionTextView"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_margin="8dp"/>
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"/>
+
+            <Button
+                android:id="@+id/menuButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="МЕНЮ"
+                android:textAllCaps="true"
+                android:backgroundTint="#fff"
+                android:textColor="#333"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/atPlaceButton"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="16dp"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
-    <Button
-        android:id="@+id/atPlaceButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Я НА МЕСТЕ"
-        android:textAllCaps="true"
-        android:textStyle="bold"
-        android:backgroundTint="#333"
-        android:textColor="#fff"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/menuButton"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="8dp"/>
-
-    <Button
-        android:id="@+id/menuButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="МЕНЮ"
-        android:textAllCaps="true"
-        android:backgroundTint="#fff"
-        android:textColor="#333"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="32dp"/>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
