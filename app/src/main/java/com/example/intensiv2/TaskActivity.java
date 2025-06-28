@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Intent;
+import android.net.Uri;
+import android.widget.VideoView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -40,6 +42,9 @@ public class TaskActivity extends AppCompatActivity {
     private TestManager.QuestData currentQuest;
     private TestData currentTest;
     private int currentQuestionIndex = 0;
+    private ImageView originalImageView;
+    private VideoView videoView;
+    private TextView textHintView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +80,9 @@ public class TaskActivity extends AppCompatActivity {
         hintButton = findViewById(R.id.hintButton);
         atPlaceButton = findViewById(R.id.atPlaceButton);
         menuButton = findViewById(R.id.menuButton);
+        originalImageView = findViewById(R.id.originalImageView);
+        videoView = findViewById(R.id.videoView);
+        textHintView = findViewById(R.id.textHintView);
     }
 
     private void setupTestData() {
@@ -134,14 +142,34 @@ public class TaskActivity extends AppCompatActivity {
     }
 
     private void switchHint() {
-        hintStep = (hintStep + 1) % currentTest.getHintImages().length;
+        hintStep = (hintStep + 1) % 4;
         updateHint();
     }
 
     private void updateHint() {
-        int imageResourceId = TestManager.getDrawableResourceId(currentTest.getHintImages()[hintStep]);
-        //hintImageView.setImageResource(imageResourceId);
-        taskTextView.setText(currentTest.getHintTexts()[hintStep]);
+        taskTextView.setVisibility(View.GONE);
+        originalImageView.setVisibility(View.GONE);
+        videoView.setVisibility(View.GONE);
+        textHintView.setVisibility(View.GONE);
+
+        if (hintStep == 0) {
+            taskTextView.setVisibility(View.VISIBLE);
+            taskTextView.setText(currentTest.getHintTexts()[0]);
+        } else if (hintStep == 1) {
+            originalImageView.setVisibility(View.VISIBLE);
+            int resId = TestManager.getDrawableResourceId(currentTest.getOriginalImage());
+            originalImageView.setImageResource(resId);
+        } else if (hintStep == 2) {
+            videoView.setVisibility(View.VISIBLE);
+            // Пример для локального видео в raw:
+            // Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/raw/" + currentTest.getVideoUrl());
+            // videoView.setVideoURI(videoUri);
+            // videoView.start();
+            // Для YouTube или внешней ссылки использовать Intent или WebView
+        } else if (hintStep == 3) {
+            textHintView.setVisibility(View.VISIBLE);
+            textHintView.setText(currentTest.getTextHint());
+        }
     }
 
     private void showQuestionDialog() {

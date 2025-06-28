@@ -47,7 +47,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="НАЗАД"
-            android:backgroundTint="#fff"
             android:textColor="#444"
             android:layout_marginEnd="8dp"
             android:background="@drawable/bg_button_white_rounded"/>
@@ -58,7 +57,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="ПРОВЕРИТЬ"
-            android:backgroundTint="#444"
             android:textColor="#fff"
             android:background="@drawable/bg_button_dark_rounded"/>
     </LinearLayout>
