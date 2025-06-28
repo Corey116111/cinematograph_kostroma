@@ -65,11 +65,13 @@
             android:gravity="center">
 
             <ImageView
+                android:id="@+id/gorkiy"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:padding="15dp"
                 android:scaleType="centerInside"
-                android:id="@+id/gorkiy"
+                android:onClick="gorkiy_click"
+                android:focusable="true"
                 android:src="@drawable/gorkiy_lock" />
         </TableRow>
 
@@ -84,6 +86,8 @@
                 android:layout_height="match_parent"
                 android:padding="15dp"
                 android:scaleType="centerInside"
+                android:onClick="romans_click"
+                android:focusable="true"
                 android:id="@+id/romans"
                 android:src="@drawable/romans_lock" />
         </TableRow>
@@ -99,6 +103,8 @@
                 android:layout_height="match_parent"
                 android:padding="15dp"
                 android:scaleType="centerInside"
+                android:onClick="evil_people_click"
+                android:focusable="true"
                 android:id="@+id/evil_people"
                 android:src="@drawable/evil_people_lock" />
         </TableRow>

@@ -26,11 +26,11 @@
             android:id="@+id/Button2"
             android:layout_width="206dp"
             android:layout_height="57dp"
+            android:layout_gravity="center"
             android:adjustViewBounds="true"
             android:onClick="skip"
-            android:text="Пропустить"
             android:scaleType="centerCrop"
-            android:layout_gravity="center" />
+            android:text="Пропустить" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
