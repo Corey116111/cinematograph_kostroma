@@ -117,6 +117,30 @@ public class main_menu_activity extends AppCompatActivity {
         }
     }
 
+    public void gorkiy_click(View v)
+    {
+        Intent intent = new Intent(this, TaskActivity.class);
+        intent.putExtra(TestConstants.EXTRA_TEST_ID, TestConstants.TEST_GORKIY);
+        startActivity(intent);
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+    }
+
+    public void romans_click(View v)
+    {
+        Intent intent = new Intent(this, TaskActivity.class);
+        intent.putExtra(TestConstants.EXTRA_TEST_ID, TestConstants.TEST_ROMANS);
+        startActivity(intent);
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+    }
+
+    public void evil_people_click(View v)
+    {
+        Intent intent = new Intent(this, TaskActivity.class);
+        intent.putExtra(TestConstants.EXTRA_TEST_ID, TestConstants.TEST_EVIL_PEOPLE);
+        startActivity(intent);
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+    }
+
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
@@ -137,7 +161,7 @@ public class main_menu_activity extends AppCompatActivity {
         editor.apply();
     }
 
-    /// pагрузка состояний из SharedPreferences
+    /// загрузка состояний из SharedPreferences
     private void loadQuestStates() {
         SharedPreferences prefs = getPreferences(MODE_PRIVATE);
         finallyLocked = prefs.getBoolean("finallyLocked", true);

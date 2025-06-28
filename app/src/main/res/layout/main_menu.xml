@@ -65,12 +65,15 @@
             android:gravity="center">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:padding="15dp"
-                android:scaleType="centerInside"
                 android:id="@+id/gorkiy"
-                android:src="@drawable/gorkiy_lock" />
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:focusable="true"
+                android:onClick="gorkiy_click"
+                android:padding="15dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/gorkiy_lock"
+                tools:ignore="SpeakableTextPresentCheck" />
         </TableRow>
 
         <TableRow
@@ -80,12 +83,15 @@
             android:gravity="center">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:padding="15dp"
-                android:scaleType="centerInside"
                 android:id="@+id/romans"
-                android:src="@drawable/romans_lock" />
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:focusable="true"
+                android:onClick="romans_click"
+                android:padding="15dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/romans_lock"
+                tools:ignore="SpeakableTextPresentCheck" />
         </TableRow>
 
         <TableRow
@@ -95,12 +101,15 @@
             android:gravity="center">
 
             <ImageView
+                android:id="@+id/evil_people"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:focusable="true"
+                android:onClick="evil_people_click"
                 android:padding="15dp"
                 android:scaleType="centerInside"
-                android:id="@+id/evil_people"
-                android:src="@drawable/evil_people_lock" />
+                android:src="@drawable/evil_people_lock"
+                tools:ignore="SpeakableTextPresentCheck" />
         </TableRow>
 
         <TableRow
