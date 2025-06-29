@@ -119,24 +119,27 @@ public class main_menu_activity extends AppCompatActivity {
 
     public void gorkiy_click(View v)
     {
-        Intent intent = new Intent(this, TaskActivity.class);
+        Intent intent = new Intent(this, QuestIntroActivity.class);
         intent.putExtra(TestConstants.EXTRA_TEST_ID, TestConstants.TEST_GORKIY);
+        intent.putExtra(QuestIntroActivity.EXTRA_SCREEN_TYPE, "intro");
         startActivity(intent);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
     public void romans_click(View v)
     {
-        Intent intent = new Intent(this, TaskActivity.class);
+        Intent intent = new Intent(this, QuestIntroActivity.class);
         intent.putExtra(TestConstants.EXTRA_TEST_ID, TestConstants.TEST_ROMANS);
+        intent.putExtra(QuestIntroActivity.EXTRA_SCREEN_TYPE, "intro");
         startActivity(intent);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
     public void evil_people_click(View v)
     {
-        Intent intent = new Intent(this, TaskActivity.class);
+        Intent intent = new Intent(this, QuestIntroActivity.class);
         intent.putExtra(TestConstants.EXTRA_TEST_ID, TestConstants.TEST_EVIL_PEOPLE);
+        intent.putExtra(QuestIntroActivity.EXTRA_SCREEN_TYPE, "intro");
         startActivity(intent);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }

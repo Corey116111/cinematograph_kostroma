@@ -25,37 +25,9 @@ public class TestManager {
     }
 
     private static final Map<Integer, QuestData> quests = new HashMap<>();
-
+    
     static {
         // Пример для "Жестокий романс"
-
-        // ГОРЬКИЙ 53
-        String gorkiyNovel = "";
-        TestData gorkiyQuestion = new TestData(
-            "ГОРЬКИЙ 53",
-            new String[]{"gorkiy_hint1", "gorkiy_hint2", "gorkiy_hint3", "gorkiy_hint4"},
-            new String[]{
-                "Найдите это место",
-                "Оригинальный кадр из фильма",
-                "Видеофрагмент сцены",
-                "Текстовая подсказка: Ищите беседку с колоннами"
-            },
-            "Сколько колонн у беседки?",
-            "7",
-            55.751244, 37.618423, 20f, 1,
-                "",
-                "",
-                "",
-                ""
-        );
-        String gorkiyPlaceInfo = "";
-        quests.put(1, new QuestData(
-            gorkiyNovel,
-            Arrays.asList(gorkiyQuestion),
-            Arrays.asList(gorkiyPlaceInfo),
-            Arrays.asList("bg_gorkiy_place1")
-        ));
-
         String novelText = "Вы перенесетесь в XIX век — эпоху жгучих страстей и томительных романов, где в душном воздухе купеческих домов витают ароматы крепкого чая и неразделённой любви.\n\nПеред вами откроется Волга — величавая и безмятежная, а старинный приволжский городок, словно сошедший с полотен Левитана, погрузит в атмосферу ностальгии по местам, кажущимся до боли знакомыми. Здесь каждый шёпот волн, каждый отсвет заката в оконных стёклах дышит поэзией русского жестокого романа.";
         TestData romansQuestion = new TestData(
                 "ЖЕСТОКИЙ РОМАНС",
@@ -104,20 +76,47 @@ public class TestManager {
                 Arrays.asList(novelText, placeInfo, placeInfo2, placeInfo3),
                 Arrays.asList("novell1","bg_task", "bg_task2","bg_task3","bg_task4")
         ));
+
+        // ГОРЬКИЙ 53
+        String gorkiyNovel = "";
+        TestData gorkiyQuestion = new TestData(
+                "ГОРЬКИЙ 53",
+                new String[]{"gorkiy_hint1", "gorkiy_hint2", "gorkiy_hint3", "gorkiy_hint4"},
+                new String[]{
+                        "Найдите это место",
+                        "Оригинальный кадр из фильма",
+                        "Видеофрагмент сцены",
+                        "Текстовая подсказка: Ищите беседку с колоннами"
+                },
+                "Сколько колонн у беседки?",
+                "7",
+                55.751244, 37.618423, 20f, 1,
+                "",
+                "",
+                "",
+                ""
+        );
+        String gorkiyPlaceInfo = "";
+        quests.put(1, new QuestData(
+                gorkiyNovel,
+                Arrays.asList(gorkiyQuestion),
+                Arrays.asList(gorkiyPlaceInfo),
+                Arrays.asList("bg_gorkiy_place1")
+        ));
         // ЗЛЫЕ ЛЮДИ
         String evilNovel = "";
         TestData evilQuestion = new TestData(
-            "ЗЛЫЕ ЛЮДИ",
-            new String[]{"evil_hint1", "evil_hint2", "evil_hint3", "evil_hint4"},
-            new String[]{
-                "Найдите это место",
-                "Оригинальный кадр из фильма",
-                "Видеофрагмент сцены",
-                "Текстовая подсказка: Ищите здание с колоннами"
-            },
-            "Сколько этажей в здании?",
-            "3",
-            55.753244, 37.620423, 30f, 1,
+                "ЗЛЫЕ ЛЮДИ",
+                new String[]{"evil_hint1", "evil_hint2", "evil_hint3", "evil_hint4"},
+                new String[]{
+                        "Найдите это место",
+                        "Оригинальный кадр из фильма",
+                        "Видеофрагмент сцены",
+                        "Текстовая подсказка: Ищите здание с колоннами"
+                },
+                "Сколько этажей в здании?",
+                "3",
+                55.753244, 37.620423, 30f, 1,
                 "",
                 "",
                 "",
@@ -125,10 +124,10 @@ public class TestManager {
         );
         String evilPlaceInfo = "";
         quests.put(3, new QuestData(
-            evilNovel,
-            Arrays.asList(evilQuestion),
-            Arrays.asList(evilPlaceInfo),
-            Arrays.asList("bg_evil_place1")
+                evilNovel,
+                Arrays.asList(evilQuestion),
+                Arrays.asList(evilPlaceInfo),
+                Arrays.asList("bg_evil_place1")
         ));
     }
     
@@ -148,4 +147,4 @@ public class TestManager {
     public static boolean hasQuest(int questId) {
         return quests.containsKey(questId);
     }
-}
+} 

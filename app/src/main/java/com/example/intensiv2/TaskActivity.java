@@ -66,6 +66,12 @@ public class TaskActivity extends AppCompatActivity {
             return;
         }
 
+        if (currentQuest == null) {
+            Toast.makeText(this, "Квест не найден!", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
         int testId = getIntent().getIntExtra(TestConstants.EXTRA_TEST_ID, -1);
         if (testId == -1) {
             finish();
@@ -289,18 +295,11 @@ public class TaskActivity extends AppCompatActivity {
 
     private void onCorrectAnswer() {
         Toast.makeText(this, "Поздравляем! Вы на месте!", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (locationNotifier != null) {
-            try {
-                locationNotifier.stop();
-                locationNotifier = null;
-            } catch (Exception e) {
-                Log.e("GPS", "Error stopping location", e);
-            }
+        
+        // Проверяем, есть ли следующий вопрос
+        int nextQuestionIndex = currentQuestionIndex + 1;
+        if (nextQuestionIndex < currentQuest.getQuestions().size()) {
+            // Есть следующий вопрос - показываем информацию о месте
             String bgResName = null;
             if (currentQuest.getPlaceInfoBgNames() != null && currentQuestionIndex < currentQuest.getPlaceInfoBgNames().size()) {
                 bgResName = currentQuest.getPlaceInfoBgNames().get(currentQuestionIndex);
@@ -314,6 +313,23 @@ public class TaskActivity extends AppCompatActivity {
             }
             startActivity(intent);
             finish();
+        } else {
+            // Квест завершен
+            Toast.makeText(this, "Квест завершен! Поздравляем!", Toast.LENGTH_LONG).show();
+            finish();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (locationNotifier != null) {
+            try {
+                locationNotifier.stop();
+                locationNotifier = null;
+            } catch (Exception e) {
+                Log.e("GPS", "Error stopping location", e);
+            }
         }
     }
 }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class QuestIntroActivity extends AppCompatActivity {
@@ -54,12 +55,19 @@ public class QuestIntroActivity extends AppCompatActivity {
             questIntroTextView.setText(questData.getPlaceInfoTexts().get(questionIndex));
             nextButton.setText("ДАЛЕЕ");
             nextButton.setOnClickListener(v -> {
-                //возвращаемся в TaskActivity, чтобы продолжить квест
-                Intent intent = new Intent(this, TaskActivity.class);
-                intent.putExtra(TestConstants.EXTRA_TEST_ID, questId);
-                intent.putExtra(EXTRA_QUESTION_INDEX, questionIndex + 1); // следующий вопрос
-                startActivity(intent);
-                finish();
+                //переходим к следующему вопросу в TaskActivity
+                int nextQuestionIndex = questionIndex + 1;
+                if (nextQuestionIndex < questData.getQuestions().size()) {
+                    Intent intent = new Intent(this, TaskActivity.class);
+                    intent.putExtra(TestConstants.EXTRA_TEST_ID, questId);
+                    intent.putExtra(EXTRA_QUESTION_INDEX, nextQuestionIndex);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    // Квест завершен
+                    Toast.makeText(this, "Квест завершен! Поздравляем!", Toast.LENGTH_LONG).show();
+                    finish();
+                }
             });
         } else {
             //обычный intro (новелла)
@@ -71,6 +79,7 @@ public class QuestIntroActivity extends AppCompatActivity {
             nextButton.setOnClickListener(v -> {
                 Intent intent = new Intent(this, TaskActivity.class);
                 intent.putExtra(TestConstants.EXTRA_TEST_ID, questId);
+                intent.putExtra(EXTRA_QUESTION_INDEX, 0); // начинаем с первого вопроса
                 startActivity(intent);
                 finish();
             });
