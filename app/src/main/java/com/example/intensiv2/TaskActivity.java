@@ -2,8 +2,12 @@ package com.example.intensiv2;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -38,6 +42,7 @@ public class TaskActivity extends AppCompatActivity {
     private ImageView originalImageView;
     private VideoView videoView;
     private TextView textHintView;
+    private ImageView hintImageView;
     private TextView taskTextView;
     private TextView titleTextView;
     private ImageButton hintButton;
@@ -54,8 +59,15 @@ public class TaskActivity extends AppCompatActivity {
 
         int questId = getIntent().getIntExtra(TestConstants.EXTRA_TEST_ID, TestConstants.TEST_GORKIY);
         currentQuest = TestManager.getQuest(questId);
-        if (currentQuest == null || currentQuest.getQuestions().isEmpty()) {
-            Toast.makeText(this, "Квест не найден", Toast.LENGTH_SHORT).show();
+
+        // Проверяем восстановление после краша
+        if (savedInstanceState != null) {
+            finish();
+            return;
+        }
+
+        int testId = getIntent().getIntExtra(TestConstants.EXTRA_TEST_ID, -1);
+        if (testId == -1) {
             finish();
             return;
         }
@@ -70,7 +82,9 @@ public class TaskActivity extends AppCompatActivity {
         initializeViews();
         setupTestData();
         setupClickListeners();
-        checkLocationPermissionAndStart();
+
+        // Отложенный запрос разрешений
+        new Handler().postDelayed(this::checkLocationPermissionAndStart, 300);
     }
 
     private void initializeViews() {
@@ -86,7 +100,10 @@ public class TaskActivity extends AppCompatActivity {
     }
 
     private void setupTestData() {
+        //заголовок
         titleTextView.setText(currentTest.getTitle());
+
+        //подсказка
         hintStep = 0;
         updateHint();
     }
@@ -118,16 +135,38 @@ public class TaskActivity extends AppCompatActivity {
     }
 
     private void checkLocationPermissionAndStart() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST);
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST);
         } else {
-            startLocationNotifier();
+            startLocationServiceSafely();
         }
     }
 
-    private void startLocationNotifier() {
-        locationNotifier = new LocationNotifier(this, currentTest.getTargetLat(), currentTest.getTargetLng(), currentTest.getRadiusMeters());
-        locationNotifier.start();
+    private void startLocationServiceSafely() {
+        try {
+            if (locationNotifier != null) {
+                locationNotifier.stop();
+                locationNotifier = null;
+            }
+
+            LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                Toast.makeText(this, "Включите GPS в настройках", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            locationNotifier = new LocationNotifier(this,
+                    currentTest.getTargetLat(),
+                    currentTest.getTargetLng(),
+                    currentTest.getRadiusMeters());
+            locationNotifier.start();
+        } catch (SecurityException e) {
+            Log.e("GPS", "Security exception", e);
+            Toast.makeText(this, "Ошибка доступа к GPS", Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Log.e("GPS", "Error starting location", e);
+            Toast.makeText(this, "Ошибка инициализации GPS", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -135,7 +174,7 @@ public class TaskActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == LOCATION_PERMISSION_REQUEST) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startLocationNotifier();
+                new Handler().postDelayed(this::startLocationServiceSafely, 300);
             } else {
                 Toast.makeText(this, "GPS недоступен, используйте кнопку 'Я на месте'", Toast.LENGTH_LONG).show();
             }
@@ -250,6 +289,19 @@ public class TaskActivity extends AppCompatActivity {
     }
 
     private void onCorrectAnswer() {
+        Toast.makeText(this, "Поздравляем! Вы на месте!", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (locationNotifier != null) {
+            try {
+                locationNotifier.stop();
+                locationNotifier = null;
+            } catch (Exception e) {
+                Log.e("GPS", "Error stopping location", e);
+            }
         String bgResName = null;
         if (currentQuest.getPlaceInfoBgNames() != null && currentQuestionIndex < currentQuest.getPlaceInfoBgNames().size()) {
             bgResName = currentQuest.getPlaceInfoBgNames().get(currentQuestionIndex);

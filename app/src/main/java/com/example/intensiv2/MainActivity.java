@@ -1,13 +1,11 @@
 package com.example.intensiv2;
 
 import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.view.SoundEffectConstants;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -40,7 +38,7 @@ public class MainActivity extends AppCompatActivity
         );
     }
 
-    /// Если выйти из приложения, режим сохранится
+    /// если выйти из приложения, режим сохранится
     @Override
     public void onWindowFocusChanged(boolean hasFocus)
     {
@@ -50,7 +48,7 @@ public class MainActivity extends AppCompatActivity
             enableFullscreen();
         }
     }
-
+    ///  при нажатии на кнопку будет звук нажатия
     private void playCustomClickSound(Context context)
     {
             MediaPlayer player = MediaPlayer.create(context, R.raw.click);
@@ -60,7 +58,7 @@ public class MainActivity extends AppCompatActivity
             player.start();
     }
 
-    /// Идем к новелле перед меню
+    /// идем к новелле перед меню
     public void GoToStartNovella(View view)
     {
         view.setEnabled(false);

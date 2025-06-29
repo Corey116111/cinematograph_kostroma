@@ -25,7 +25,7 @@ public class TestManager {
     }
 
     private static final Map<Integer, QuestData> quests = new HashMap<>();
-    
+
     static {
         // Пример для "Жестокий романс"
 
@@ -123,7 +123,7 @@ public class TestManager {
                 "",
                 ""
         );
-        String evilPlaceInfo = ""; 
+        String evilPlaceInfo = "";
         quests.put(3, new QuestData(
             evilNovel,
             Arrays.asList(evilQuestion),
@@ -148,4 +148,4 @@ public class TestManager {
     public static boolean hasQuest(int questId) {
         return quests.containsKey(questId);
     }
-} 
+}
