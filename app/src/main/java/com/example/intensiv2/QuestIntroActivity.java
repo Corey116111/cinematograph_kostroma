@@ -1,7 +1,9 @@
 package com.example.intensiv2;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -41,13 +43,10 @@ public class QuestIntroActivity extends AppCompatActivity {
             finish();
             return;
         }
-        //устанавливаем фон, если передан
-        if (bgResName != null) {
-            int bgResId = getResources().getIdentifier(bgResName, "drawable", getPackageName());
-            if (bgResId != 0) {
-                findViewById(R.id.scrollView).getRootView().setBackgroundResource(bgResId);
-            }
-        }
+        
+        // Устанавливаем фон из TestManager
+        setBackgroundFromTestManager();
+        
         //выбираем текст и заголовок
         if ("placeinfo".equals(screenType)) {
             //экран после вопроса
@@ -85,5 +84,35 @@ public class QuestIntroActivity extends AppCompatActivity {
             });
         }
         // soundButton хз зачем кнопка на макете но можно будет добавить че там хотели
+    }
+    
+    private void setBackgroundFromTestManager() {
+        try {
+            if (questData != null && questData.getPlaceInfoBgNames() != null && !questData.getPlaceInfoBgNames().isEmpty()) {
+                String bgImageName = null;
+                
+                if ("placeinfo".equals(screenType)) {
+                    // Для экрана информации о месте используем изображение по индексу вопроса + 1
+                    // (индекс 0 - для intro, индексы 1+ для placeinfo экранов)
+                    int bgIndex = questionIndex + 1;
+                    if (bgIndex < questData.getPlaceInfoBgNames().size()) {
+                        bgImageName = questData.getPlaceInfoBgNames().get(bgIndex);
+                    }
+                } else {
+                    // Для intro экрана используем первое изображение (индекс 0)
+                    bgImageName = questData.getPlaceInfoBgNames().get(0);
+                }
+                
+                if (bgImageName != null && !bgImageName.isEmpty()) {
+                    int bgResId = TestManager.getDrawableResourceId(bgImageName);
+                    if (bgResId != 0) {
+                        findViewById(R.id.scrollView).setBackgroundResource(bgResId);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // В случае ошибки оставляем дефолтный фон
+            e.printStackTrace();
+        }
     }
 } 
