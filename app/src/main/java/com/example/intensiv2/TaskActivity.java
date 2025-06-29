@@ -114,8 +114,7 @@ public class TaskActivity extends AppCompatActivity {
         menuButton.setOnClickListener(v -> finish());
     }
 
-    private void enableFullscreen()
-    {
+    private void enableFullscreen() {
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY |
                         View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
@@ -205,7 +204,7 @@ public class TaskActivity extends AppCompatActivity {
             textHintView.setVisibility(View.VISIBLE);
             textHintView.setText(currentTest.getTextHint());
         } else if (hintStep == 3) {
-            if(currentTest.getVideoUrl() != null || !currentTest.getVideoUrl().isEmpty()){
+            if (currentTest.getVideoUrl() != null || !currentTest.getVideoUrl().isEmpty()) {
                 videoView.setVisibility(View.VISIBLE);
                 Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/raw/" + currentTest.getVideoUrl());
                 videoView.setVideoURI(videoUri);
@@ -302,18 +301,19 @@ public class TaskActivity extends AppCompatActivity {
             } catch (Exception e) {
                 Log.e("GPS", "Error stopping location", e);
             }
-        String bgResName = null;
-        if (currentQuest.getPlaceInfoBgNames() != null && currentQuestionIndex < currentQuest.getPlaceInfoBgNames().size()) {
-            bgResName = currentQuest.getPlaceInfoBgNames().get(currentQuestionIndex);
+            String bgResName = null;
+            if (currentQuest.getPlaceInfoBgNames() != null && currentQuestionIndex < currentQuest.getPlaceInfoBgNames().size()) {
+                bgResName = currentQuest.getPlaceInfoBgNames().get(currentQuestionIndex);
+            }
+            Intent intent = new Intent(this, QuestIntroActivity.class);
+            intent.putExtra(TestConstants.EXTRA_TEST_ID, getIntent().getIntExtra(TestConstants.EXTRA_TEST_ID, TestConstants.TEST_GORKIY));
+            intent.putExtra(QuestIntroActivity.EXTRA_SCREEN_TYPE, "placeinfo");
+            intent.putExtra(QuestIntroActivity.EXTRA_QUESTION_INDEX, currentQuestionIndex);
+            if (bgResName != null) {
+                intent.putExtra(QuestIntroActivity.EXTRA_BG_RES_NAME, bgResName);
+            }
+            startActivity(intent);
+            finish();
         }
-        Intent intent = new Intent(this, QuestIntroActivity.class);
-        intent.putExtra(TestConstants.EXTRA_TEST_ID, getIntent().getIntExtra(TestConstants.EXTRA_TEST_ID, TestConstants.TEST_GORKIY));
-        intent.putExtra(QuestIntroActivity.EXTRA_SCREEN_TYPE, "placeinfo");
-        intent.putExtra(QuestIntroActivity.EXTRA_QUESTION_INDEX, currentQuestionIndex);
-        if (bgResName != null) {
-            intent.putExtra(QuestIntroActivity.EXTRA_BG_RES_NAME, bgResName);
-        }
-        startActivity(intent);
-        finish();
     }
-} 
+}
