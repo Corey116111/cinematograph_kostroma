@@ -22,29 +22,26 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/finally_window"
-            android:scaleType="centerInside"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/text_input_layout"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:paddingRight="6dp"/>
+            android:scaleType="centerInside" />
 
         <EditText
             android:id="@+id/text_input"
-            android:layout_width="match_parent"
+            android:layout_width="160dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            android:layout_marginLeft="8dp"
+            android:layout_marginBottom="245dp"
             android:background="@drawable/edittext_border"
-            android:hint="Введите ваше имя здесь..."
-            android:textColorHint="@drawable/hint_color"
-            android:layout_gravity="center"
+            android:hint="Введите ваше имя..."
             android:inputType="text"
-            android:layout_marginTop="120dp"
-            android:padding="16dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:textColor="@android:color/black"
             android:maxLength="50"
-            android:textSize="18sp" />
+            android:minHeight="1dp"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textColor="@android:color/black"
+            android:textColorHint="@drawable/hint_color"
+            android:textSize="14sp"
+            tools:ignore="TouchTargetSizeCheck" />
     </FrameLayout>
 
 
