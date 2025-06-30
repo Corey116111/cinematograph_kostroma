@@ -332,7 +332,7 @@ public class TaskActivity extends AppCompatActivity {
 
     private void onCorrectAnswer() {
         Toast.makeText(this, "Поздравляем! Вы на месте!", Toast.LENGTH_SHORT).show();
-
+        
         // Проверяем, есть ли информация о месте для текущего вопроса
         boolean hasPlaceInfo = currentQuest.getPlaceInfoTexts() != null &&
                               currentQuestionIndex < currentQuest.getPlaceInfoTexts().size();
