@@ -33,6 +33,8 @@ import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RadioGroup;
+import android.widget.RadioButton;
 
 public class TaskActivity extends AppCompatActivity {
     private static final int LOCATION_PERMISSION_REQUEST = 1001;
@@ -227,7 +229,11 @@ public class TaskActivity extends AppCompatActivity {
 
     private void showQuestionDialog() {
         FragmentManager fm = getSupportFragmentManager();
-        QuestionDialog dialog = QuestionDialog.newInstance(currentTest.getQuestion(), currentTest.getCorrectAnswer());
+        QuestionDialog dialog = QuestionDialog.newInstance(
+            currentTest.getQuestion(),
+            currentTest.getCorrectAnswer(),
+            currentTest.getOptions()
+        );
         dialog.show(fm, "question_dialog");
     }
 
@@ -239,12 +245,14 @@ public class TaskActivity extends AppCompatActivity {
     public static class QuestionDialog extends DialogFragment {
         private static final String ARG_QUESTION = "question";
         private static final String ARG_CORRECT_ANSWER = "correct_answer";
+        private static final String ARG_OPTIONS = "options";
 
-        public static QuestionDialog newInstance(String question, String correctAnswer) {
+        public static QuestionDialog newInstance(String question, String correctAnswer, String[] options) {
             QuestionDialog dialog = new QuestionDialog();
             Bundle args = new Bundle();
             args.putString(ARG_QUESTION, question);
             args.putString(ARG_CORRECT_ANSWER, correctAnswer);
+            args.putStringArray(ARG_OPTIONS, options);
             dialog.setArguments(args);
             return dialog;
         }
@@ -253,16 +261,37 @@ public class TaskActivity extends AppCompatActivity {
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             String question = getArguments().getString(ARG_QUESTION, "Вопрос");
             String correctAnswer = getArguments().getString(ARG_CORRECT_ANSWER, "");
+            String[] options = getArguments().getStringArray(ARG_OPTIONS);
 
             LayoutInflater inflater = requireActivity().getLayoutInflater();
             View view = inflater.inflate(R.layout.dialog_question, null);
 
             TextView questionText = view.findViewById(R.id.dialogQuestionText);
             EditText answerInput = view.findViewById(R.id.dialogAnswerInput);
+            RadioGroup optionsGroup = view.findViewById(R.id.dialogOptionsGroup);
             Button btnCancel = view.findViewById(R.id.dialogCancel);
             Button btnCheck = view.findViewById(R.id.dialogCheck);
 
             questionText.setText(question);
+
+            if (options != null && options.length > 0) {
+                // Показываем варианты, скрываем EditText
+                optionsGroup.setVisibility(View.VISIBLE);
+                answerInput.setVisibility(View.GONE);
+                optionsGroup.removeAllViews();
+                for (int i = 0; i < options.length; i++) {
+                    RadioButton rb = new RadioButton(getContext());
+                    rb.setText(options[i]);
+                    rb.setId(i);
+                    rb.setTextSize(18);
+                    rb.setTextColor(0xFF333333);
+                    optionsGroup.addView(rb);
+                }
+            } else {
+                // Только текстовый ответ
+                optionsGroup.setVisibility(View.GONE);
+                answerInput.setVisibility(View.VISIBLE);
+            }
 
             AlertDialog dialog = new AlertDialog.Builder(requireActivity())
                     .setView(view)
@@ -270,8 +299,16 @@ public class TaskActivity extends AppCompatActivity {
 
             btnCancel.setOnClickListener(v -> dialog.dismiss());
             btnCheck.setOnClickListener(v -> {
-                String answer = answerInput.getText().toString().trim();
-                if (correctAnswer.equals(answer)) {
+                String answer = null;
+                if (options != null && options.length > 0) {
+                    int checkedId = optionsGroup.getCheckedRadioButtonId();
+                    if (checkedId >= 0 && checkedId < options.length) {
+                        answer = options[checkedId];
+                    }
+                } else {
+                    answer = answerInput.getText().toString().trim();
+                }
+                if (answer != null && correctAnswer.equals(answer)) {
                     ((TaskActivity) requireActivity()).onCorrectAnswer();
                     dialog.dismiss();
                 } else {
@@ -295,28 +332,34 @@ public class TaskActivity extends AppCompatActivity {
 
     private void onCorrectAnswer() {
         Toast.makeText(this, "Поздравляем! Вы на месте!", Toast.LENGTH_SHORT).show();
-        
-        // Проверяем, есть ли следующий вопрос
-        int nextQuestionIndex = currentQuestionIndex + 1;
-        if (nextQuestionIndex < currentQuest.getQuestions().size()) {
-            // Есть следующий вопрос - показываем информацию о месте
-            String bgResName = null;
-            if (currentQuest.getPlaceInfoBgNames() != null && currentQuestionIndex < currentQuest.getPlaceInfoBgNames().size()) {
-                bgResName = currentQuest.getPlaceInfoBgNames().get(currentQuestionIndex);
-            }
+
+        // Проверяем, есть ли информация о месте для текущего вопроса
+        boolean hasPlaceInfo = currentQuest.getPlaceInfoTexts() != null &&
+                              currentQuestionIndex < currentQuest.getPlaceInfoTexts().size();
+
+        if (hasPlaceInfo) {
+            // Показываем информацию о месте для текущего вопроса
             Intent intent = new Intent(this, QuestIntroActivity.class);
             intent.putExtra(TestConstants.EXTRA_TEST_ID, getIntent().getIntExtra(TestConstants.EXTRA_TEST_ID, TestConstants.TEST_GORKIY));
             intent.putExtra(QuestIntroActivity.EXTRA_SCREEN_TYPE, "placeinfo");
             intent.putExtra(QuestIntroActivity.EXTRA_QUESTION_INDEX, currentQuestionIndex);
-            if (bgResName != null) {
-                intent.putExtra(QuestIntroActivity.EXTRA_BG_RES_NAME, bgResName);
-            }
             startActivity(intent);
             finish();
         } else {
-            // Квест завершен
-            Toast.makeText(this, "Квест завершен! Поздравляем!", Toast.LENGTH_LONG).show();
-            finish();
+            // Проверяем, есть ли следующий вопрос
+            int nextQuestionIndex = currentQuestionIndex + 1;
+            if (nextQuestionIndex < currentQuest.getQuestions().size()) {
+                // Есть следующий вопрос - переходим к нему
+                Intent intent = new Intent(this, TaskActivity.class);
+                intent.putExtra(TestConstants.EXTRA_TEST_ID, getIntent().getIntExtra(TestConstants.EXTRA_TEST_ID, TestConstants.TEST_GORKIY));
+                intent.putExtra(QuestIntroActivity.EXTRA_QUESTION_INDEX, nextQuestionIndex);
+                startActivity(intent);
+                finish();
+            } else {
+                // Квест завершен
+                Toast.makeText(this, "Квест завершен! Поздравляем!", Toast.LENGTH_LONG).show();
+                finish();
+            }
         }
     }
 

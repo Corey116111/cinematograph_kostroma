@@ -19,23 +19,10 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints">
 
-        <ImageView
-        android:id="@+id/Button1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="10dp"
-        android:layout_weight="3"
-        android:clickable="true"
-        android:focusable="true"
-        android:onClick="skip"
-        android:scaleType="centerInside"
-        android:src="@drawable/propusk"
-        tools:ignore="SpeakableTextPresentCheck" />
-
         <View
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_weight="1"/>
+            android:layout_weight="3"/>
 
         <ImageView
         android:id="@+id/Button2"

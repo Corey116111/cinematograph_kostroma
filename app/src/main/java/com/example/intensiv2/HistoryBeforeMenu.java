@@ -16,8 +16,6 @@ public class HistoryBeforeMenu extends AppCompatActivity {
     private int clickCount = 0;
     private ConstraintLayout history_before_menu_id_glav;
 
-    private static final String CHANNEL_ID = "MyChannelID"; /// удалить потом, тест уведомлений был
-    private static final int NOTIFICATION_ID = 1; /// удалить потом, тест уведомлений был
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +23,6 @@ public class HistoryBeforeMenu extends AppCompatActivity {
         enableFullscreen();
         setContentView(R.layout.history_before_menu);
         history_before_menu_id_glav = findViewById(R.id.history_before_menu_id_glav);
-        createNotificationChannel();
 
     }
     /// убираю шторы и кнопки телефона
@@ -47,31 +44,6 @@ public class HistoryBeforeMenu extends AppCompatActivity {
             enableFullscreen();
         }
     }
-    /// удалить потом, тест уведомлений был
-    private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "MyChannel";
-            String description = "Channel for my notifications";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
-
-    /// удалить потом, тест уведомлений был
-    private void showNotification() {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(android.R.drawable.ic_dialog_info)
-                .setContentTitle("Внимание!")
-                .setContentText("Сбрасываю телефон до заводских настроек...")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(NOTIFICATION_ID, builder.build());
-    }
 
     // следующая реплика
     public void next(View view) {
@@ -84,10 +56,10 @@ public class HistoryBeforeMenu extends AppCompatActivity {
         else if (clickCount == 2)
         {
             history_before_menu_id_glav.setBackgroundResource(R.drawable.novella3);
-            getWindow().getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_VISIBLE 
-            );
-            showNotification();
+        }
+        else if (clickCount == 3)
+        {
+            history_before_menu_id_glav.setBackgroundResource(R.drawable.novella4);
         }
         else
         {
@@ -100,12 +72,5 @@ public class HistoryBeforeMenu extends AppCompatActivity {
         Intent intent = new Intent (this, main_menu_activity.class);
         startActivity(intent);
         finish();
-    }
-
-
-    // пропускаем вступление новеллы (сразу в меню)
-    public void skip(View view)
-    {
-        goToMainMenu();
     }
 }

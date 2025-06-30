@@ -1,45 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:padding="24dp"
-    android:background="@drawable/bg_dialog_rounded"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#F7F3E7"
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/dialogQuestionText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Сколько колонн у беседки?"
+        android:text="Вопрос"
         android:textSize="18sp"
-        android:textColor="#222"
+        android:textColor="#333"
         android:gravity="center"
-        android:layout_marginBottom="12dp"
-        android:textStyle="bold"/>
+        android:layout_marginBottom="12dp" />
 
-    <TextView
+    <!-- Для вариантов ответа -->
+    <RadioGroup
+        android:id="@+id/dialogOptionsGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_marginBottom="12dp"
         android:text="Введите ответ:"
         android:textSize="16sp"
         android:textColor="#444"
         android:layout_marginBottom="4dp"/>
 
+    <!-- Для текстового ответа -->
     <EditText
         android:id="@+id/dialogAnswerInput"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@drawable/bg_edittext_rounded"
-        android:padding="8dp"
-        android:textColor="#222"
-        android:textSize="16sp"
-        android:layout_marginBottom="20dp"/>
+        android:layout_height="wrap_content"
+        android:hint="Введите ответ"
+        android:inputType="text"
+        android:layout_marginBottom="12dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="start|center_vertical">
 
         <Button
             android:id="@+id/dialogCancel"
@@ -47,9 +50,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="НАЗАД"
-            android:textColor="#444"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/bg_button_white_rounded"/>
+            android:background="@drawable/bg_button_white_rounded"
+            android:textColor="#333"
+            android:textAllCaps="false"
+            android:layout_marginEnd="8dp" />
 
         <Button
             android:id="@+id/dialogCheck"
@@ -57,7 +61,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="ПРОВЕРИТЬ"
+            android:background="@drawable/bg_button_dark_rounded"
             android:textColor="#fff"
-            android:background="@drawable/bg_button_dark_rounded"/>
+            android:textAllCaps="false" />
     </LinearLayout>
 </LinearLayout>
