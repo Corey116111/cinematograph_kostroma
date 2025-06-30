@@ -47,7 +47,7 @@
             android:background="@drawable/edittext_border"
             android:hint="Введите ваше имя..."
             android:inputType="text"
-            android:maxLength="50"
+            android:maxLength="40"
             android:minHeight="1dp"
             android:padding="10dp"
             android:singleLine="true"
