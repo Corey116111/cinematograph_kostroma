@@ -49,7 +49,7 @@ public class TaskActivity extends AppCompatActivity {
     private TextView taskTextView;
     private TextView titleTextView;
     private ImageButton hintButton;
-    private Button atPlaceButton, menuButton;
+    private ImageView atPlaceButton, menuButton;
     private TestManager.QuestData currentQuest;
     private TestData currentTest;
     private int currentQuestionIndex = 0;
