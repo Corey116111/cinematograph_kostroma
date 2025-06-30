@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/menu"
+    android:id="@+id/finally_quest_window">
+
+    <FrameLayout
+        android:id="@+id/text_overlay"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="MissingConstraints">
+
+        <ImageView
+            android:id="@+id/endGame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/finalimagegorkiy"
+            android:scaleType="centerInside" />
+
+
+    </FrameLayout>
+
+
+    <LinearLayout
+        android:id="@+id/bottom_buttons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp"
+        android:weightSum="6"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:ignore="MissingConstraints">
+
+        <ImageView
+            android:id="@+id/left_button"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_weight="3"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="goToMenuFromFinally"
+            android:scaleType="centerInside"
+            android:src="@drawable/finally_window_back"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

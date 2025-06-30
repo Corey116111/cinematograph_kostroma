@@ -63,8 +63,10 @@ public class QuestIntroActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 } else {
-                    // Квест завершен
-                    Toast.makeText(this, "Квест завершен! Поздравляем!", Toast.LENGTH_LONG).show();
+                    // Квест завершен, переходим на экран EndGame
+                    Intent intent = new Intent(this, EndGame.class);
+                    intent.putExtra(TestConstants.EXTRA_TEST_ID, questId);
+                    startActivity(intent);
                     finish();
                 }
             });

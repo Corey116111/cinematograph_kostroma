@@ -47,6 +47,9 @@
         <activity
             android:name=".QuestIntroActivity"
             android:exported="false" />
+        <activity
+            android:name=".EndGame"
+            android:exported="false" />
     </application>
 
 </manifest>

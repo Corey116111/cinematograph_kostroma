@@ -11,17 +11,20 @@ public class TestManager {
         private List<TestData> questions; // список вопросов
         private List<String> placeInfoTexts; // тексты для экранов информации о месте
         private List<String> placeInfoBgNames;
+        private String finalImage;
 
-        public QuestData(String novelText, List<TestData> questions, List<String> placeInfoTexts, List<String> placeInfoBgNames) {
+        public QuestData(String novelText, List<TestData> questions, List<String> placeInfoTexts, List<String> placeInfoBgNames, String finalImage) {
             this.novelText = novelText;
             this.questions = questions;
             this.placeInfoTexts = placeInfoTexts;
             this.placeInfoBgNames = placeInfoBgNames;
+            this.finalImage = finalImage;
         }
         public String getNovelText() { return novelText; }
         public List<TestData> getQuestions() { return questions; }
         public List<String> getPlaceInfoTexts() { return placeInfoTexts; }
         public List<String> getPlaceInfoBgNames() { return placeInfoBgNames; }
+        public String getFinalImage() { return finalImage; }
     }
 
     private static final Map<Integer, QuestData> quests = new HashMap<>();
@@ -67,11 +70,13 @@ public class TestManager {
         String placeInfo2 = "Съёмки фильма проходили в живописных городах России — Ярославле, Москве и преимущественно в Костроме. Именно здесь, в знаменитой беседке Островского, был снят этот проникновенный эпизод. \nХотя подобных беседок немало, костромская была выбрана осознанно — её изысканная архитектура как нельзя лучше передавала атмосферу произведения. \nОсобое очарование кадру придавало естественное освещение, подаренное удачным расположением, и аутентичные декорации старинного городского парка.";
         String placeInfo3 = "Ресторан 'Старая пристань' переносит гостей на легендарную 'Ласточку' - ту самую, где случилась судьбоносная сцена. \n" +
                 "Но эти воды помнят и другой, тревожный момент: во время съёмок, когда Карандышев в отчаянии гнался за пароходом, Андрей Мягков, сидевший в лодке задом наперёд, чудом избежал беды, не заметив, как оказался на опасном расстоянии от безжалостного винта.\n";
+        String finalImageRomans = "finalimagegorkiy";
         quests.put(2, new QuestData(
                 novelText,
                 Arrays.asList(romansQuestion, romansQuestion2, romansQuestion3), //тестовая информация
                 Arrays.asList(placeInfo, placeInfo2, placeInfo3), //информация до/после нахождения точки
-                Arrays.asList("novell1","bg_task", "bg_task2","bg_task3","bg_task4") //картинки для текстовой информации
+                Arrays.asList("novell1","bg_task", "bg_task2","bg_task3","bg_task4"), //картинки для текстовой информации
+                finalImageRomans
         ));
         //endregion
 
@@ -82,7 +87,7 @@ public class TestManager {
                 "ГОРЬКИЙ 53",
                 new String[]{"gorkiy_hint1"},
                 "Как называется сейчас здание на котором была надпись “30 лет СССР”",
-                "надо почитать самим..",
+                "1",
                 55.751244, 37.618423, 20f, 1,
                 "originalgorkiy1",
                 "distortedgorkiy1",
@@ -116,11 +121,13 @@ public class TestManager {
                 "Именно здесь снимали ночную перестрелку! Для достоверности звукорежиссёр использовал настоящий ППШ — выстрел разбудил пол-Костромы. А ещё... главный герой Андрей Фролов хотел сам прыгать через баррикаду, но режиссер запретил: \"Ты же лицо сериала!\"\n";
         String gorkiyPlaceInfo2 = "Для сцены с растяжкой и старинными автомобилями улицу на 3 дня превратили в 1950-е: убрали асфальт (засыпали щебнем!), демонтировали светофоры и вешали на дома влажное полотно — чтобы скрыть современную штукатурку.";
         String gorkiyPlaceInfo3 = "Настоящая каланча никогда не была вокзалом! Для съемок художники за 3 дня прикрепили таблички \"Горький\", а перрон построили из фанеры. Говорят, что даже местные пытались купить билеты на поезд.";
+        String finalImageGorkiy = "finalimagegorkiy";
         quests.put(1, new QuestData(
                 gorkiyNovel,
                 Arrays.asList(gorkiyQuestion, gorkiyQuestion2, gorkiyQuestion3),
                 Arrays.asList(gorkiyPlaceInfo, gorkiyPlaceInfo2, gorkiyPlaceInfo3),
-                Arrays.asList("bg_gorkiy1", "bg_gorkiy2", "bg_gorkiy3", "bg_gorkiy4")
+                Arrays.asList("bg_gorkiy1", "bg_gorkiy2", "bg_gorkiy3", "bg_gorkiy4"),
+                finalImageGorkiy
         ));
         //endregion
 
@@ -166,11 +173,13 @@ public class TestManager {
         String evilPlaceInfo = "Подобно главным героям отрывка, прошедшим через долгий путь необъяснимого, колокольня Спасской церкви (1760 г.) прожила свою богатую историю: спустя три десятилетия, оказавшись в окружении мелочных рядов, она сменила обветшалый облик на пышное барочное убранство, а впоследствии, пережив разборку и возрождение, обрела новый образ в русско-византийском стиле, став неотъемлемой частью торгового мелочного ряда";
         String evilPlaceInfo2 = "Мадам Бариньяк, не знающая усталости в беседе, оживленно рассуждает, меж тем как юная Варвара, едва сдерживая волнение, внимает каждому её слову, шагая по шумным мелочным Костромских рядов. Эти просторные торговые улицы, сменившие хаотичное скопище деревянных лавок, некогда стихийно вырастающих среди строгой каменной классики костромского центра, теперь величаво тянулись вдоль улиц, вобрав в себя весь гомон и пестроту городского торга ";
         String evilPlaceInfo3 = "Нельзя, прогуливаясь среди суетных торговых рядов, не остановить взгляд на возвышенном храме Спаса, чья история столь же богата, сколь и драматична. Закрытый в 1929 году, он пережил годы забвения: сначала как антирелигиозный музей, затем, лишившись колокольни и глав, превратился в обычный склад. Но время расставило всё по местам: в 1976 году храму вернули его архитектурное величие, а в 1992-м, увенчав крестами, окончательно восстановили духовное предназначение.";
+        String finalImageEvil = "finalimagegorkiy";
         quests.put(3, new QuestData(
                 evilNovel,
                 Arrays.asList(evilQuestion, evilQuestion2, evilQuestion3),
                 Arrays.asList(evilPlaceInfo, evilPlaceInfo2, evilPlaceInfo3),
-                Arrays.asList("evilnovell", "bg_placevil1", "bg_placevil2", "bg_placevil3")
+                Arrays.asList("evilnovell", "bg_placevil1", "bg_placevil2", "bg_placevil3"),
+                finalImageEvil
         ));
         //endregion
     }
