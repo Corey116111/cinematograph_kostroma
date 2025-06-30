@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -217,6 +218,12 @@ public class TaskActivity extends AppCompatActivity {
                 Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/raw/" + currentTest.getVideoUrl());
                 videoView.setVideoURI(videoUri);
                 videoView.start();
+                videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        videoView.start();
+                    }
+                });
                 // Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/raw/" + currentTest.getVideoUrl());
                 // videoView.setVideoURI(videoUri);
                 // videoView.start();
@@ -303,10 +310,10 @@ public class TaskActivity extends AppCompatActivity {
                 if (options != null && options.length > 0) {
                     int checkedId = optionsGroup.getCheckedRadioButtonId();
                     if (checkedId >= 0 && checkedId < options.length) {
-                        answer = options[checkedId];
+                        answer = options[checkedId].toLowerCase();
                     }
                 } else {
-                    answer = answerInput.getText().toString().trim();
+                    answer = answerInput.getText().toString().trim().toLowerCase();
                 }
                 if (answer != null && correctAnswer.equals(answer)) {
                     ((TaskActivity) requireActivity()).onCorrectAnswer();
