@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,7 +17,7 @@ public class QuestIntroActivity extends AppCompatActivity {
     public static final String EXTRA_BG_RES_NAME = "bg_res_name";
 
     private TextView questTitleTextView, questIntroTextView;
-    private Button nextButton;
+    private ImageView nextButton;
     private ImageButton soundButton;
     private int questId;
     private TestManager.QuestData questData;
@@ -28,7 +29,7 @@ public class QuestIntroActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quest_intro);
-
+        enableFullscreen();
         questTitleTextView = findViewById(R.id.questTitleTextView);
         questIntroTextView = findViewById(R.id.questIntroTextView);
         nextButton = findViewById(R.id.nextButton);
@@ -52,7 +53,6 @@ public class QuestIntroActivity extends AppCompatActivity {
             //экран после вопроса
             questTitleTextView.setText(questData.getQuestions().get(questionIndex).getTitle());
             questIntroTextView.setText(questData.getPlaceInfoTexts().get(questionIndex));
-            nextButton.setText("ДАЛЕЕ");
             nextButton.setOnClickListener(v -> {
                 //переходим к следующему вопросу в TaskActivity
                 int nextQuestionIndex = questionIndex + 1;
@@ -76,7 +76,6 @@ public class QuestIntroActivity extends AppCompatActivity {
                 questTitleTextView.setText(questData.getQuestions().get(0).getTitle());
             }
             questIntroTextView.setText(questData.getNovelText());
-            nextButton.setText("ДАЛЕЕ");
             nextButton.setOnClickListener(v -> {
                 Intent intent = new Intent(this, TaskActivity.class);
                 intent.putExtra(TestConstants.EXTRA_TEST_ID, questId);
@@ -86,6 +85,29 @@ public class QuestIntroActivity extends AppCompatActivity {
             });
         }
         // soundButton хз зачем кнопка на макете но можно будет добавить че там хотели
+    }
+
+    private void enableFullscreen()
+    {
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY |
+                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+                        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
+                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+                        View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
+                        View.SYSTEM_UI_FLAG_FULLSCREEN
+        );
+    }
+
+    /// если выйти из приложения, режим сохранится
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus)
+    {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus)
+        {
+            enableFullscreen();
+        }
     }
 
     private void setBackgroundFromTestManager() {

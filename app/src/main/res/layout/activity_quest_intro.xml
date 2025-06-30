@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/kalancha">
@@ -10,76 +11,75 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="ЖЕСТОКИЙ РОМАНС"
-        android:fontFamily="@font/roboto"
+        android:fontFamily="@font/inter"
         android:textStyle="bold"
         android:textSize="24sp"
         android:gravity="center"
         android:textColor="#fff"
         android:shadowColor="#80000000"
+        android:paddingBottom="10dp"
         android:shadowDx="0"
         android:shadowDy="2"
         android:shadowRadius="4"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp"/>
+        android:layout_marginTop="95dp"/>
 
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-
-        android:layout_marginTop="16dp"
-
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@id/nextButton"
+        android:background="@drawable/bg_task"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/questTitleTextView"
-        app:layout_constraintVertical_bias="0.0"
-        android:background="@drawable/bg_task">
+        app:layout_constraintTop_toBottomOf="@id/questTitleTextView">
 
         <TextView
             android:id="@+id/questIntroTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif"
+            android:fontFamily="@font/robotoserif_extra_light"
+            android:textStyle="italic"
+            android:paddingLeft="7dp"
+            android:paddingRight="7dp"
             android:gravity="start"
             android:lineSpacingExtra="4dp"
             android:shadowColor="#80000000"
-            android:shadowDx="0"
-            android:shadowDy="2"
-            android:shadowRadius="4"
+            android:shadowDx="6"
+            android:shadowDy="7"
+            android:shadowRadius="3"
             android:text="Текст новеллы..."
             android:textColor="#fff"
-            android:textSize="18sp" />
+            android:textSize="20sp" />
     </ScrollView>
 
+
     <ImageButton
-        android:id="@+id/soundButton"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="@drawable/helper"
-        android:src="@android:drawable/ic_lock_silent_mode_off"
-        android:contentDescription="Озвучить"
-        app:layout_constraintBottom_toBottomOf="@id/scrollView"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginBottom="8dp"/>
+    android:id="@+id/soundButton"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:background="@drawable/helper"
+    android:src="@android:drawable/ic_lock_silent_mode_off"
+    android:contentDescription="Озвучить"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    android:layout_marginStart="16dp"
+    android:layout_marginBottom="55dp"
+    android:elevation="4dp"/>
 
-    <Button
+
+    <ImageView
         android:id="@+id/nextButton"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:text="ДАЛЕЕ"
-        android:textAllCaps="true"
-        android:textStyle="bold"
-        android:backgroundTint="#F1EDE2"
-        android:textColor="#333"
+        android:layout_width="130dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="50dp"
+        android:background="@drawable/dalee"
+        android:layout_marginRight="13dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="32dp"/>
+        android:elevation="4dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout> 
+    </androidx.constraintlayout.widget.ConstraintLayout>
