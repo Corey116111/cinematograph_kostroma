@@ -23,6 +23,14 @@ public class EndGame extends AppCompatActivity {
         endGameView = findViewById(R.id.endGame);
         questData = TestManager.getQuest(questId);
 
+        // Устанавливаем флаг "квест пройден"
+        QuestStateManager.setQuestPassed(this, questId, true);
+        
+        // Проверяем, нужно ли разблокировать финальный квест
+        if (QuestStateManager.areAllQuestsPassed(this)) {
+            QuestStateManager.setFinallyLocked(this, false);
+        }
+
         // Устанавливаем фон из TestManager
         setBackgroundFromTestManager();
     }
