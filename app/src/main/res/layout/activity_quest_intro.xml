@@ -42,21 +42,21 @@
 
     <Button
         android:id="@+id/startQuestButton"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:layout_width="323dp"
+        android:layout_height="60dp"
         android:text="НАЧАТЬ КВЕСТ"
         android:textStyle="bold"
         android:textSize="18sp"
-        android:background="@drawable/bg_button_white_rounded"
+        android:background="@drawable/ticket_button_backg"
+        android:textColor="@color/text_gray"
+
         app:backgroundTint="@null"
-        android:visibility="gone"
-        android:textColor="#333"
         app:layout_constraintBottom_toTopOf="@+id/backButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="30dp"/>
+        android:layout_marginEnd="34dp"
+        android:layout_marginBottom="35dp"/>
 
     <Button
         android:id="@+id/backButton"
