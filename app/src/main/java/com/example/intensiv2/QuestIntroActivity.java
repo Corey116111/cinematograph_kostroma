@@ -16,7 +16,6 @@ public class QuestIntroActivity extends AppCompatActivity {
     public static final String EXTRA_QUESTION_INDEX = "question_index";
     public static final String EXTRA_BG_RES_NAME = "bg_res_name";
 
-    private TextView questTitleTextView, questIntroTextView;
     private ImageView nextButton;
     private ImageButton soundButton;
     private int questId;
@@ -30,8 +29,6 @@ public class QuestIntroActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quest_intro);
         enableFullscreen();
-        questTitleTextView = findViewById(R.id.questTitleTextView);
-        questIntroTextView = findViewById(R.id.questIntroTextView);
         nextButton = findViewById(R.id.nextButton);
         soundButton = findViewById(R.id.soundButton);
 
@@ -51,8 +48,6 @@ public class QuestIntroActivity extends AppCompatActivity {
         //выбираем текст и заголовок
         if ("placeinfo".equals(screenType)) {
             //экран после вопроса
-            questTitleTextView.setText(questData.getQuestions().get(questionIndex).getTitle());
-            questIntroTextView.setText(questData.getPlaceInfoTexts().get(questionIndex));
             nextButton.setOnClickListener(v -> {
                 //переходим к следующему вопросу в TaskActivity
                 int nextQuestionIndex = questionIndex + 1;
@@ -72,10 +67,6 @@ public class QuestIntroActivity extends AppCompatActivity {
             });
         } else {
             //обычный intro (новелла)
-            if (!questData.getQuestions().isEmpty()) {
-                questTitleTextView.setText(questData.getQuestions().get(0).getTitle());
-            }
-            questIntroTextView.setText(questData.getNovelText());
             nextButton.setOnClickListener(v -> {
                 Intent intent = new Intent(this, TaskActivity.class);
                 intent.putExtra(TestConstants.EXTRA_TEST_ID, questId);
