@@ -212,7 +212,7 @@ public class TaskActivity extends AppCompatActivity {
         } else if (hintStep == 2) {
             textHintView.setVisibility(View.VISIBLE);
             textHintView.setText(currentTest.getTextHint());
-        } else if (hintStep == 3) {
+        } else if (hintStep == 3) { // добавить 4 подсказку - координаты места
             if (currentTest.getVideoUrl() != null || !currentTest.getVideoUrl().isEmpty()) {
                 videoView.setVisibility(View.VISIBLE);
                 Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/raw/" + currentTest.getVideoUrl());

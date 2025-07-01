@@ -32,7 +32,7 @@ public class TestManager {
                 "ЖЕСТОКИЙ РОМАНС",
                 new String[]{"romans_hint1"},
                 "Как много шагов по лестнице отделяет нас от мгновения, остановленного кадре фильма? Сосчитайте количество шагов по лестнице, с места отрывка фильма",
-                "13",
+                "12",
                 57.7679, 40.9269, 25f, 1,
                 "originalromans1",
                 "disortedromans1",
@@ -43,7 +43,7 @@ public class TestManager {
                 "ЖЕСТОКИЙ РОМАНС",
                 new String[]{"romans_hint2"},
                 "Сколько изящных колонн украшают беседку Островского, если от общего числа ажурных перильных опор отнять массивные несущие столбы?",
-                "7",
+                "17",
                 57.7679, 40.9269, 25f, 2,
                 "originalromans2",
                 "distortedromans2",
@@ -54,7 +54,7 @@ public class TestManager {
                 "ЖЕСТОКИЙ РОМАНС",
                 new String[]{"romans_hint3"},
                 "Что же это за величественное строение, что возвышается перед вами? \n",
-                "старая пристань",
+                "старая пристань", // сделать потом ToLower() к инпутам
                 57.7679, 40.9269, 25f, 2,
                 "originalromans3",
                 "distortedromans3",
@@ -98,14 +98,14 @@ public class TestManager {
         TestData gorkiyQuestion3 = new TestData(
                 "ГОРЬКИЙ 53",
                 new String[]{"gorkiy_hint3"},
-                "Сколько арочных окон на втором ярусе каланчи?",
-                "6",
+                "Как называется здание перед вами?",
+                "гауптвахта",
                 55.751244, 37.618423, 20f, 1,
                 "originalgorkiy3",
                 "distortedgorkiy3",
                 "gaup",
                 "Высоченная башня с часами, где в 1953-м встречали поезда. В реальности она тушила огонь, а не встречала гостей",
-                new String[]{"4", "6", "8"}
+                new String[]{"Филармония", "Каланча", "Гауптвахта"}
         );
         String finalImageGorkiy = "finalimagegorkiy";
         String ticketInfoImageGorkiy = "ticketgorkiy";
@@ -128,7 +128,7 @@ public class TestManager {
                 "evildistorted3",
                 "handshake",
                 "Врата открываются там, где возвышается башня Молочных рядов, взирая на тебя с величественным спокойствием.",
-                new String[] {"Часовня,","Крыша с флюгером", "Колокольня", "Шпиль с острым навершием"}
+                new String[] {"Часовня","Крыша с флюгером", "Колокольня", "Шпиль с острым навершием"}
         );
         TestData evilQuestion2 = new TestData(
                 "ЗЛЫЕ ЛЮДИ",
@@ -140,7 +140,7 @@ public class TestManager {
                 "evildistorted1",
                 "womens",
                 "Место, где переплелись древняя культура Костромы, сочная гастрономия чебуреков и стихия моды в мелочных рядов",
-                new String[]{"да", "нет"}
+                new String[]{"Да", "Нет"}
         );
         TestData evilQuestion3 = new TestData(
                 "ЗЛЫЕ ЛЮДИ",
