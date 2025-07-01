@@ -10,15 +10,18 @@ public class TestManager {
         private List<TestData> questions; // список вопросов
         private List<String> placeInfoBgNames;
         private String finalImage;
+        private String ticketInfoImage;
 
-        public QuestData(List<TestData> questions, List<String> placeInfoBgNames, String finalImage) {
+        public QuestData(List<TestData> questions, List<String> placeInfoBgNames, String finalImage, String ticketInfoImage) {
             this.questions = questions;
             this.placeInfoBgNames = placeInfoBgNames;
             this.finalImage = finalImage;
+            this.ticketInfoImage = ticketInfoImage;
         }
         public List<TestData> getQuestions() { return questions; }
         public List<String> getPlaceInfoBgNames() { return placeInfoBgNames; }
         public String getFinalImage() { return finalImage; }
+        public String getTicketInfoImage() { return ticketInfoImage; }
     }
 
     private static final Map<Integer, QuestData> quests = new HashMap<>();
@@ -59,10 +62,12 @@ public class TestManager {
                 "Как страж веков, это здание гордо высится над седыми водами Волги-матушки, овеянное дыханием истории"
         );
         String finalImageRomans = "finalimageromans";
+        String ticketInfoImageRomans = "ticketromans";
         quests.put(2, new QuestData(
                 Arrays.asList(romansQuestion, romansQuestion2, romansQuestion3), //тестовая информация
                 Arrays.asList("novell1","bg_task1", "bg_task2","bg_task3"), //картинки для текстовой информации
-                finalImageRomans
+                finalImageRomans,
+                ticketInfoImageRomans
         ));
         //endregion
 
@@ -103,10 +108,12 @@ public class TestManager {
                 new String[]{"4", "6", "8"}
         );
         String finalImageGorkiy = "finalimagegorkiy";
+        String ticketInfoImageGorkiy = "ticketgorkiy";
         quests.put(1, new QuestData(
                 Arrays.asList(gorkiyQuestion, gorkiyQuestion2, gorkiyQuestion3),
                 Arrays.asList("bg_gorkiy1", "bg_gorkiy2", "bg_gorkiy3", "bg_gorkiy4"),
-                finalImageGorkiy
+                finalImageGorkiy,
+                ticketInfoImageGorkiy
         ));
         //endregion
 
@@ -148,10 +155,12 @@ public class TestManager {
                 new String[]{"1", "5", "6", "7"}
         );
         String finalImageEvil = "finalimageevil";
+        String ticketInfoImageEvil = "ticketevil";
         quests.put(3, new QuestData(
                 Arrays.asList(evilQuestion, evilQuestion2, evilQuestion3),
                 Arrays.asList("evilnovell", "bg_placevil1", "bg_placevil2", "bg_placevil3"),
-                finalImageEvil
+                finalImageEvil,
+                ticketInfoImageEvil
         ));
         //endregion
     }
