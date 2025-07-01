@@ -49,7 +49,7 @@ public class TaskActivity extends AppCompatActivity {
     private TextView taskTextView;
     private TextView titleTextView;
     private ImageButton hintButton;
-    private Button atPlaceButton, menuButton;
+    private ImageView atPlaceButton, menuButton;
     private TestManager.QuestData currentQuest;
     private TestData currentTest;
     private int currentQuestionIndex = 0;
@@ -276,8 +276,8 @@ public class TaskActivity extends AppCompatActivity {
             TextView questionText = view.findViewById(R.id.dialogQuestionText);
             EditText answerInput = view.findViewById(R.id.dialogAnswerInput);
             RadioGroup optionsGroup = view.findViewById(R.id.dialogOptionsGroup);
-            Button btnCancel = view.findViewById(R.id.dialogCancel);
-            Button btnCheck = view.findViewById(R.id.dialogCheck);
+            ImageView imgCancel = view.findViewById(R.id.dialogCancel);
+            ImageView imgCheck = view.findViewById(R.id.dialogCheck);
 
             questionText.setText(question);
 
@@ -304,8 +304,8 @@ public class TaskActivity extends AppCompatActivity {
                     .setView(view)
                     .create();
 
-            btnCancel.setOnClickListener(v -> dialog.dismiss());
-            btnCheck.setOnClickListener(v -> {
+            imgCancel.setOnClickListener(v -> dialog.dismiss());
+            imgCheck.setOnClickListener(v -> {
                 String answer = null;
                 if (options != null && options.length > 0) {
                     int checkedId = optionsGroup.getCheckedRadioButtonId();

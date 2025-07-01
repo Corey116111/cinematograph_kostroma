@@ -63,6 +63,7 @@ public class HistoryBeforeMenu extends AppCompatActivity {
         }
         else
         {
+            view.setEnabled(false);
             goToMainMenu();
         }
     }
