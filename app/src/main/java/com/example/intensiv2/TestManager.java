@@ -9,20 +9,17 @@ public class TestManager {
     public static class QuestData {
         private String novelText; // текст новеллы
         private List<TestData> questions; // список вопросов
-        private List<String> placeInfoTexts; // тексты для экранов информации о месте
         private List<String> placeInfoBgNames;
         private String finalImage;
 
-        public QuestData(String novelText, List<TestData> questions, List<String> placeInfoTexts, List<String> placeInfoBgNames, String finalImage) {
+        public QuestData(String novelText, List<TestData> questions, List<String> placeInfoBgNames, String finalImage) {
             this.novelText = novelText;
             this.questions = questions;
-            this.placeInfoTexts = placeInfoTexts;
             this.placeInfoBgNames = placeInfoBgNames;
             this.finalImage = finalImage;
         }
         public String getNovelText() { return novelText; }
         public List<TestData> getQuestions() { return questions; }
-        public List<String> getPlaceInfoTexts() { return placeInfoTexts; }
         public List<String> getPlaceInfoBgNames() { return placeInfoBgNames; }
         public String getFinalImage() { return finalImage; }
     }
@@ -73,7 +70,6 @@ public class TestManager {
         quests.put(2, new QuestData(
                 novelText,
                 Arrays.asList(romansQuestion, romansQuestion2, romansQuestion3), //тестовая информация
-                Arrays.asList(placeInfo, placeInfo2, placeInfo3), //информация до/после нахождения точки
                 Arrays.asList("novell1","bg_task", "bg_task2","bg_task3","bg_task4"), //картинки для текстовой информации
                 finalImageRomans
         ));
@@ -114,7 +110,7 @@ public class TestManager {
                 "originalgorkiy3",
                 "distortedgorkiy3",
                 "gaup",
-                "Высоченная башня с часами, где в 1953-м “встречали поезда”. В реальности она тушила огонь, а не встречала гостей",
+                "Высоченная башня с часами, где в 1953-м встречали поезда. В реальности она тушила огонь, а не встречала гостей",
                 new String[]{"4", "6", "8"}
         );
         String gorkiyPlaceInfo = "Настоящие костромские трамваи исчезли в 1920-х! Для сериала рельсы нарисовали мелом, а вагон привезли из музея. После съемок его подарили городу\n" +
@@ -125,7 +121,6 @@ public class TestManager {
         quests.put(1, new QuestData(
                 gorkiyNovel,
                 Arrays.asList(gorkiyQuestion, gorkiyQuestion2, gorkiyQuestion3),
-                Arrays.asList(gorkiyPlaceInfo, gorkiyPlaceInfo2, gorkiyPlaceInfo3),
                 Arrays.asList("bg_gorkiy1", "bg_gorkiy2", "bg_gorkiy3", "bg_gorkiy4"),
                 finalImageGorkiy
         ));
@@ -177,7 +172,6 @@ public class TestManager {
         quests.put(3, new QuestData(
                 evilNovel,
                 Arrays.asList(evilQuestion, evilQuestion2, evilQuestion3),
-                Arrays.asList(evilPlaceInfo, evilPlaceInfo2, evilPlaceInfo3),
                 Arrays.asList("evilnovell", "bg_placevil1", "bg_placevil2", "bg_placevil3"),
                 finalImageEvil
         ));
@@ -200,4 +194,4 @@ public class TestManager {
     public static boolean hasQuest(int questId) {
         return quests.containsKey(questId);
     }
-} 
+}
