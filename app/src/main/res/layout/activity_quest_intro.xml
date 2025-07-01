@@ -6,36 +6,12 @@
     android:layout_height="match_parent"
     android:background="@drawable/kalancha">
 
-    <TextView
-        android:id="@+id/questTitleTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="ЖЕСТОКИЙ РОМАНС"
-        android:fontFamily="@font/inter"
-        android:textStyle="bold"
-        android:textSize="24sp"
-        android:gravity="center"
-        android:textColor="#fff"
-        android:shadowColor="#80000000"
-        android:paddingBottom="10dp"
-        android:shadowDx="0"
-        android:shadowDy="2"
-        android:shadowRadius="4"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="95dp"/>
-
     <ScrollView
         android:id="@+id/scrollView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="@drawable/bg_task1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/questTitleTextView">
-    </ScrollView>
+        tools:ignore="SpeakableTextPresentCheck"></ScrollView>
 
 
     <ImageButton
