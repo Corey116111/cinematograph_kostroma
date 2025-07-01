@@ -58,7 +58,7 @@ public class TestManager {
                 "ЖЕСТОКИЙ РОМАНС",
                 new String[]{"romans_hint3"},
                 "Что же это за величественное строение, что возвышается перед вами? \n",
-                "cтарая пристань",
+                "старая пристань",
                 57.7679, 40.9269, 25f, 2,
                 "originalromans3",
                 "distortedromans3",
