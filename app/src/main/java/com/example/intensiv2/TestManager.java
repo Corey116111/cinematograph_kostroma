@@ -7,18 +7,15 @@ import java.util.Arrays;
 
 public class TestManager {
     public static class QuestData {
-        private String novelText; // текст новеллы
         private List<TestData> questions; // список вопросов
         private List<String> placeInfoBgNames;
         private String finalImage;
 
-        public QuestData(String novelText, List<TestData> questions, List<String> placeInfoBgNames, String finalImage) {
-            this.novelText = novelText;
+        public QuestData(List<TestData> questions, List<String> placeInfoBgNames, String finalImage) {
             this.questions = questions;
             this.placeInfoBgNames = placeInfoBgNames;
             this.finalImage = finalImage;
         }
-        public String getNovelText() { return novelText; }
         public List<TestData> getQuestions() { return questions; }
         public List<String> getPlaceInfoBgNames() { return placeInfoBgNames; }
         public String getFinalImage() { return finalImage; }
@@ -28,7 +25,6 @@ public class TestManager {
     
     static {
         // Пример для "Жестокий романс"
-        String novelText = "Вы перенесетесь в XIX век — эпоху жгучих страстей и томительных романов, где в душном воздухе купеческих домов витают ароматы крепкого чая и неразделённой любви.\n\nПеред вами откроется Волга — величавая и безмятежная, а старинный приволжский городок, словно сошедший с полотен Левитана, погрузит в атмосферу ностальгии по местам, кажущимся до боли знакомыми. Здесь каждый шёпот волн, каждый отсвет заката в оконных стёклах дышит поэзией русского жестокого романа.";
         TestData romansQuestion = new TestData(
                 "ЖЕСТОКИЙ РОМАНС",
                 new String[]{"romans_hint1"},
@@ -64,7 +60,6 @@ public class TestManager {
         );
         String finalImageRomans = "finalimageromans";
         quests.put(2, new QuestData(
-                novelText,
                 Arrays.asList(romansQuestion, romansQuestion2, romansQuestion3), //тестовая информация
                 Arrays.asList("novell1","bg_task1", "bg_task2","bg_task3"), //картинки для текстовой информации
                 finalImageRomans
@@ -72,8 +67,6 @@ public class TestManager {
         //endregion
 
         //region ГОРЬКИЙ 53
-        String gorkiyNovel = "1953 год. Горький. Закрытый город, где тени прошлого длиннее настоящего... Здесь, среди шепота стен и тревожных сводок, расследуется убийство, всколыхнувшее тишину послевоенных лет. Но сам Горький тех лет почти исчез под слоями времени.\n" +
-                "А знаешь, где ожил этот детектив из эпохи стали и страха? Здесь. В Костроме. Она стала его двойником, его кинематографической машиной времени. Каждый кадр сериала – камень в мостовой этого города.\n";
         TestData gorkiyQuestion = new TestData(
                 "ГОРЬКИЙ 53",
                 new String[]{"gorkiy_hint1"},
@@ -111,7 +104,6 @@ public class TestManager {
         );
         String finalImageGorkiy = "finalimagegorkiy";
         quests.put(1, new QuestData(
-                gorkiyNovel,
                 Arrays.asList(gorkiyQuestion, gorkiyQuestion2, gorkiyQuestion3),
                 Arrays.asList("bg_gorkiy1", "bg_gorkiy2", "bg_gorkiy3", "bg_gorkiy4"),
                 finalImageGorkiy
@@ -119,8 +111,6 @@ public class TestManager {
         //endregion
 
         //region ЗЛЫЕ ЛЮДИ
-        String evilNovel = "Конец XIX века раскроет перед вами свои тайны: вы станете частью расследования громкого и загадочного преступления, шагните в самые тёмные уголки этой истории… \n" +
-                "или сумеете обойти её глухие закоулки…\n";
         TestData evilQuestion = new TestData(
                 "ЗЛЫЕ ЛЮДИ",
                 new String[]{"evil_hint1"},
@@ -159,7 +149,6 @@ public class TestManager {
         );
         String finalImageEvil = "finalimageevil";
         quests.put(3, new QuestData(
-                evilNovel,
                 Arrays.asList(evilQuestion, evilQuestion2, evilQuestion3),
                 Arrays.asList("evilnovell", "bg_placevil1", "bg_placevil2", "bg_placevil3"),
                 finalImageEvil
