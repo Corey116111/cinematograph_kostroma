@@ -50,8 +50,10 @@ public class QuestIntroActivity extends AppCompatActivity {
         //выбираем текст и заголовок
         if ("placeinfo".equals(screenType)) {
             //экран после вопроса
+            nextButton.setEnabled(false);
             questTitleTextView.setText(questData.getQuestions().get(questionIndex).getTitle());
             nextButton.setOnClickListener(v -> {
+                v.setEnabled(false);
                 //переходим к следующему вопросу в TaskActivity
                 int nextQuestionIndex = questionIndex + 1;
                 if (nextQuestionIndex < questData.getQuestions().size()) {
@@ -81,7 +83,9 @@ public class QuestIntroActivity extends AppCompatActivity {
                 finish();
             });
         }
+        nextButton.setEnabled(true);
         // soundButton хз зачем кнопка на макете но можно будет добавить че там хотели
+
     }
 
     private void enableFullscreen()
