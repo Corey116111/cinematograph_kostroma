@@ -62,7 +62,7 @@ public class TestManager {
                 "pristan",
                 "Как страж веков, это здание гордо высится над седыми водами Волги-матушки, овеянное дыханием истории"
         );
-        String finalImageRomans = "finalimagegorkiy";
+        String finalImageRomans = "finalimageromans";
         quests.put(2, new QuestData(
                 novelText,
                 Arrays.asList(romansQuestion, romansQuestion2, romansQuestion3), //тестовая информация
@@ -157,7 +157,7 @@ public class TestManager {
                 "Места суть там, где возвышается храм Спаса в Рядах",
                 new String[]{"1", "5", "6", "7"}
         );
-        String finalImageEvil = "finalimagegorkiy";
+        String finalImageEvil = "finalimageevil";
         quests.put(3, new QuestData(
                 evilNovel,
                 Arrays.asList(evilQuestion, evilQuestion2, evilQuestion3),
