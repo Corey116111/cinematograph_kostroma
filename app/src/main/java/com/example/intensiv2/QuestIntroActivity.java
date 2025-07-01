@@ -59,6 +59,7 @@ public class QuestIntroActivity extends AppCompatActivity {
             startQuestButton.setVisibility(View.VISIBLE);
             backButton.setVisibility(View.VISIBLE);
             nextButton.setVisibility(View.GONE);
+            soundButton.setVisibility(View.GONE);
 
             startQuestButton.setOnClickListener(v -> {
                 Intent intent = new Intent(this, QuestIntroActivity.class);
@@ -95,6 +96,7 @@ public class QuestIntroActivity extends AppCompatActivity {
                 }
             });
             nextButton.setEnabled(true);
+            soundButton.setVisibility(View.VISIBLE);
             nextButton.setVisibility(View.VISIBLE);
         } else {
             //обычный intro (новелла)
@@ -106,6 +108,7 @@ public class QuestIntroActivity extends AppCompatActivity {
                 finish();
             });
             nextButton.setEnabled(true);
+            soundButton.setVisibility(View.VISIBLE);
             nextButton.setVisibility(View.VISIBLE);
         }
         // soundButton хз зачем кнопка на макете но можно будет добавить че там хотели

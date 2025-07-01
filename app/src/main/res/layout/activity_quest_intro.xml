@@ -43,20 +43,20 @@
     <Button
         android:id="@+id/startQuestButton"
         android:layout_width="0dp"
-        android:layout_height="68dp"
+        android:layout_height="50dp"
         android:text="НАЧАТЬ КВЕСТ"
         android:textStyle="bold"
         android:textSize="18sp"
         android:background="@drawable/bg_button_white_rounded"
         app:backgroundTint="@null"
-        android:textColor="#333"
         android:visibility="gone"
+        android:textColor="#333"
         app:layout_constraintBottom_toTopOf="@+id/backButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginBottom="80dp"/>
+        android:layout_marginBottom="30dp"/>
 
     <Button
         android:id="@+id/backButton"
