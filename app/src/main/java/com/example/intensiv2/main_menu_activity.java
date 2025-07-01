@@ -11,10 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class main_menu_activity extends AppCompatActivity {
 
-    public boolean gorkiy_not_passed = true;
-    public boolean romans_not_passed = true;
-    public boolean evil_people_not_passed = true;
-    public boolean finallyLocked = true; // финальный квест заблокирован
     private ImageView finallyQuest;
     private ImageView gorkiy;
     private ImageView romans;
@@ -31,7 +27,6 @@ public class main_menu_activity extends AppCompatActivity {
         romans = findViewById(R.id.romans);
         evil_people = findViewById(R.id.evil_people);
 
-        loadQuestStates();
         updateQuestImages();
     }
 
@@ -45,7 +40,6 @@ public class main_menu_activity extends AppCompatActivity {
     protected void onResume()
     {
         super.onResume();
-        loadQuestStates();
         updateQuestImages();
     }
 
@@ -54,27 +48,31 @@ public class main_menu_activity extends AppCompatActivity {
         runOnUiThread(() -> {
             ViewGroup.LayoutParams params = finallyQuest.getLayoutParams();
 
+            boolean finallyLocked = QuestStateManager.isFinallyLocked(this);
             finallyQuest.setImageResource(finallyLocked
                     ? R.drawable.finally_lock
                     : R.drawable.finally_unlocked);
             finallyQuest.setLayoutParams(params);
 
             params = gorkiy.getLayoutParams();
-            gorkiy.setImageResource(gorkiy_not_passed
-                    ? R.drawable.gorkiy_lock
-                    : R.drawable.gorkiy_unlocked);
+            boolean gorkiyPassed = QuestStateManager.isQuestPassed(this, TestConstants.TEST_GORKIY);
+            gorkiy.setImageResource(gorkiyPassed
+                    ? R.drawable.gorkiy_unlocked
+                    : R.drawable.gorkiy_lock);
             gorkiy.setLayoutParams(params);
 
             params = romans.getLayoutParams();
-            romans.setImageResource(romans_not_passed
-                    ? R.drawable.romans_lock
-                    : R.drawable.romans_unlocked);
+            boolean romansPassed = QuestStateManager.isQuestPassed(this, TestConstants.TEST_ROMANS);
+            romans.setImageResource(romansPassed
+                    ? R.drawable.romans_unlocked
+                    : R.drawable.romans_lock);
             romans.setLayoutParams(params);
 
             params = evil_people.getLayoutParams();
-            evil_people.setImageResource(evil_people_not_passed
-                    ? R.drawable.evil_people_lock
-                    : R.drawable.evil_people_unlocked);
+            boolean evilPeoplePassed = QuestStateManager.isQuestPassed(this, TestConstants.TEST_EVIL_PEOPLE);
+            evil_people.setImageResource(evilPeoplePassed
+                    ? R.drawable.evil_people_unlocked
+                    : R.drawable.evil_people_lock);
             evil_people.setLayoutParams(params);
         });
     }
@@ -93,17 +91,18 @@ public class main_menu_activity extends AppCompatActivity {
 
     public void unlockQuest(View v)
     {
-        gorkiy_not_passed = false;
-        romans_not_passed = false;
-        evil_people_not_passed = false;
-        finallyLocked = false;
+        // Разблокируем все квесты
+        QuestStateManager.setQuestPassed(this, TestConstants.TEST_GORKIY, true);
+        QuestStateManager.setQuestPassed(this, TestConstants.TEST_ROMANS, true);
+        QuestStateManager.setQuestPassed(this, TestConstants.TEST_EVIL_PEOPLE, true);
+        QuestStateManager.setFinallyLocked(this, false);
 
-        saveQuestStates();
         updateQuestImages();
     }
 
     public void finally_quest_click(View v)
     {
+        boolean finallyLocked = QuestStateManager.isFinallyLocked(this);
         if (finallyLocked)
         {
             Toast.makeText(main_menu_activity.this,
@@ -150,26 +149,5 @@ public class main_menu_activity extends AppCompatActivity {
         if (hasFocus) {
             enableFullscreen();
         }
-    }
-
-
-    /// cохранение состояний в SharedPreferences
-    private void saveQuestStates() {
-        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean("finallyLocked", finallyLocked);
-        editor.putBoolean("gorkiyLocked", gorkiy_not_passed);
-        editor.putBoolean("romansLocked", romans_not_passed);
-        editor.putBoolean("evilPeopleLocked", evil_people_not_passed);
-        editor.apply();
-    }
-
-    /// загрузка состояний из SharedPreferences
-    private void loadQuestStates() {
-        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-        finallyLocked = prefs.getBoolean("finallyLocked", true);
-        gorkiy_not_passed = prefs.getBoolean("gorkiyLocked", true);
-        romans_not_passed = prefs.getBoolean("romansLocked", true);
-        evil_people_not_passed = prefs.getBoolean("evilPeopleLocked", true);
     }
 }
