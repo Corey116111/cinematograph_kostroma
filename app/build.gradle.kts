@@ -7,12 +7,14 @@ android {
     compileSdk = 36
 
     defaultConfig {
+        val yandexMapsApiKey = project.properties["YANDEX_MAPS_API_KEY"] as? String ?: ""
         applicationId = "com.example.intensiv2"
         minSdk = 26
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-
+        manifestPlaceholders["YANDEX_MAPS_API_KEY"] = yandexMapsApiKey
+        buildConfigField("String", "YANDEX_MAPS_API_KEY", "\"$yandexMapsApiKey\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -32,7 +34,9 @@ android {
 }
 
 dependencies {
-
+    implementation(libs.activity.ktx)
+    //noinspection Aligned16KB
+    implementation("com.yandex.android:maps.mobile:4.17.0-full")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)

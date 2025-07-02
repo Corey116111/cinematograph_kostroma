@@ -54,5 +54,6 @@ public class TestData implements Serializable {
     public String getOriginalImage() { return originalImage; }
     public String getVideoUrl() { return videoUrl; }
     public String getTextHint() { return textHint; }
+
     public String[] getOptions() { return options; }
 }
