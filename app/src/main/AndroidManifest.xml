@@ -49,6 +49,6 @@
     </application>
     <meta-data
         android:name="com.yandex.maps.api.v2.apikey"
-        android:value="846adde4-5e39-4f2c-9d43-d4d4909e6f92" />
+        android:value="${YANDEX_MAPS_API_KEY}"/>
 
 </manifest>

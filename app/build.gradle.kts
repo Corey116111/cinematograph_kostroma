@@ -7,12 +7,14 @@ android {
     compileSdk = 36
 
     defaultConfig {
+        val yandexMapsApiKey = project.properties["YANDEX_MAPS_API_KEY"] as? String ?: ""
         applicationId = "com.example.intensiv2"
         minSdk = 26
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-
+        manifestPlaceholders["YANDEX_MAPS_API_KEY"] = yandexMapsApiKey
+        buildConfigField("String", "YANDEX_MAPS_API_KEY", "\"$yandexMapsApiKey\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
