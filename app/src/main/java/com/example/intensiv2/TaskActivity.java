@@ -6,8 +6,11 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -17,7 +20,9 @@ import android.widget.Toast;
 import android.content.Intent;
 import android.net.Uri;
 import android.widget.VideoView;
-
+import android.provider.Settings;
+import android.location.Location;
+import android.location.LocationManager;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -68,8 +73,6 @@ public class TaskActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        MapKitFactory.setApiKey("${YANDEX_MAPS_API_KEY}");
-        MapKitFactory.initialize(this);
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_task);
@@ -221,18 +224,24 @@ public class TaskActivity extends AppCompatActivity {
         textHintView.setVisibility(View.GONE);
         //taskTextView.setVisibility(View.GONE);
 
-        if (hintStep == 0) {
+        if (hintStep == 0)
+        {
             disortedImageView.setVisibility(View.VISIBLE);
             int resId = TestManager.getDrawableResourceId(currentTest.getDistortedImage());
             disortedImageView.setImageResource(resId);
-        } else if (hintStep == 1) {
+        }
+        else if (hintStep == 1)
+        {
             originalImageView.setVisibility(View.VISIBLE);
             int resId = TestManager.getDrawableResourceId(currentTest.getOriginalImage());
             originalImageView.setImageResource(resId);
-        } else if (hintStep == 2) {
+        }
+        else if (hintStep == 2)
+        {
             textHintView.setVisibility(View.VISIBLE);
             textHintView.setText(currentTest.getTextHint());
-        } else if (hintStep == 3) { // добавить 4 подсказку - координаты места
+        }
+        else if (hintStep == 3) { // добавить 4 подсказку - координаты места
             if (currentTest.getVideoUrl() != null || !currentTest.getVideoUrl().isEmpty()) {
                 videoView.setVisibility(View.VISIBLE);
                 Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/raw/" + currentTest.getVideoUrl());
@@ -248,15 +257,15 @@ public class TaskActivity extends AppCompatActivity {
                 // videoView.setVideoURI(videoUri);
                 // videoView.start();
             }
-             else if (hintStep == 4)
-            {
-                showMapHint();
-            }
-            else
-            {
+        }
+        else if (hintStep == 4)
+        {
+          showMapHint();
+        }
+        else
+        {
                 hintStep = 0;
                 updateHint();
-            }
         }
     }
 
@@ -279,10 +288,14 @@ public class TaskActivity extends AppCompatActivity {
 
     private void initializeMap() {
         try {
-            Point targetPoint = new Point(
-                    currentTest.getTargetLat(),
-                    currentTest.getTargetLng()
-            );
+            // Проверяем инициализацию MapKit
+            if (mapView == null) {
+                Toast.makeText(this, "Ошибка: MapView не инициализирован", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Целевая точка
+            Point targetPoint = new Point(57.769617, 40.929763);
 
             // Настройка камеры
             mapView.getMap().move(
@@ -291,11 +304,10 @@ public class TaskActivity extends AppCompatActivity {
                     null
             );
 
-            // Добавляем маркер
+            // Добавляем объекты на карту
             MapObjectCollection mapObjects = mapView.getMap().getMapObjects();
             mapObjects.addPlacemark(targetPoint);
 
-            // Добавляем круг радиуса
             CircleMapObject circle = mapObjects.addCircle(
                     new Circle(targetPoint, currentTest.getRadiusMeters())
             );
@@ -303,9 +315,82 @@ public class TaskActivity extends AppCompatActivity {
             circle.setStrokeColor(0xFF0000);
             circle.setStrokeWidth(2f);
 
+            // Проверка интернет-соединения
+            if (!isNetworkAvailable()) {
+                Toast.makeText(this, "Нет интернет-соединения", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            checkAndShowUserLocation();
+
         } catch (Exception e) {
-            Log.e("MAP_ERROR", "Error initializing map", e);
+            Log.e("MAP_ERROR", "Map initialization failed", e);
             Toast.makeText(this, "Ошибка загрузки карты", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    private void checkAndShowUserLocation() {
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST);
+            return;
+        }
+
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        // Проверяем, включен ли GPS
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            // Показываем диалог с предложением включить GPS
+            new AlertDialog.Builder(this)
+                    .setTitle("Требуется GPS")
+                    .setMessage("Для отображения вашего местоположения включите GPS")
+                    .setPositiveButton("Включить", (dialog, which) -> {
+                        // Открываем настройки местоположения
+                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+
+                        // Запускаем проверку снова через 2 секунды
+                        new Handler().postDelayed(() -> {
+                            if (mapView != null) {
+                                checkAndShowUserLocation();
+                            }
+                        }, 2000);
+                    })
+                    .setNegativeButton("Продолжить без GPS", null)
+                    .show();
+            return;
+        }
+
+        // Если GPS включен, пытаемся получить местоположение
+        try {
+            android.location.Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+            if (lastKnownLocation != null) {
+                // Текущая позиция пользователя
+                Point userPoint = new Point(
+                        lastKnownLocation.getLatitude(),
+                        lastKnownLocation.getLongitude()
+                );
+
+                // Добавляем маркер текущего местоположения
+                MapObjectCollection mapObjects = mapView.getMap().getMapObjects();
+                mapObjects.addPlacemark(userPoint);
+
+            } else {
+                // Если местоположение не получено, пробуем еще раз через 1 секунду
+                new Handler().postDelayed(() -> {
+                    if (mapView != null) {
+                        checkAndShowUserLocation();
+                    }
+                }, 1000);
+            }
+        } catch (SecurityException e) {
+            Log.e("GPS", "Permission error", e);
         }
     }
 
