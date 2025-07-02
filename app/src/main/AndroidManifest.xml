@@ -5,6 +5,9 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <application
         android:requestLegacyExternalStorage="true"
@@ -16,6 +19,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Intensiv2">
+
+        <meta-data
+            android:name="com.yandex.maps.api.v2.apikey"
+            android:value="${YANDEX_MAPS_API_KEY}"/>
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -47,8 +55,4 @@
             android:name=".EndGame"
             android:exported="false" />
     </application>
-    <meta-data
-        android:name="com.yandex.maps.api.v2.apikey"
-        android:value="${YANDEX_MAPS_API_KEY}"/>
-
 </manifest>

@@ -6,16 +6,22 @@ android {
     namespace = "com.example.intensiv2"
     compileSdk = 36
 
+    buildFeatures {
+        buildConfig = true  
+    }
+
     defaultConfig {
-        val yandexMapsApiKey = project.properties["YANDEX_MAPS_API_KEY"] as? String ?: ""
         applicationId = "com.example.intensiv2"
         minSdk = 26
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val yandexMapsApiKey = project.properties["YANDEX_MAPS_API_KEY"] as? String ?: ""
+
         manifestPlaceholders["YANDEX_MAPS_API_KEY"] = yandexMapsApiKey
         buildConfigField("String", "YANDEX_MAPS_API_KEY", "\"$yandexMapsApiKey\"")
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -25,6 +31,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            isShrinkResources = false
         }
     }
     compileOptions {
@@ -34,9 +41,8 @@ android {
 }
 
 dependencies {
-    implementation(libs.activity.ktx)
-    //noinspection Aligned16KB
-    implementation("com.yandex.android:maps.mobile:4.17.0-full")
+    implementation("com.yandex.android:maps.mobile:4.5.1-full")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -44,4 +50,5 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    implementation("androidx.appcompat:appcompat:1.6.1")
 }

@@ -13,6 +13,8 @@ import android.view.animation.AnimationUtils;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.yandex.mapkit.MapKitFactory;
+
 public class MainActivity extends AppCompatActivity
 {
 
@@ -20,6 +22,8 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        MapKitFactory.setApiKey("${YANDEX_MAPS_API_KEY}");
+        MapKitFactory.initialize(this);
         EdgeToEdge.enable(this);
         enableFullscreen();
         setContentView(R.layout.activity_main);
