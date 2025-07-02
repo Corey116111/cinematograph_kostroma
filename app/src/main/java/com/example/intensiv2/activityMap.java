@@ -12,6 +12,6 @@ public class activityMap extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        MapKitFactory.setApiKey("AQVN3GNujXfRDTbrB5LiVkcH6UXwG_rH_EKSp3bE");
+        MapKitFactory.setApiKey("${YANDEX_MAPS_API_KEY}");
     }
 }

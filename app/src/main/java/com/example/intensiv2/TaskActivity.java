@@ -68,7 +68,7 @@ public class TaskActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        MapKitFactory.setApiKey("AQVN3GNujXfRDTbrB5LiVkcH6UXwG_rH_EKSp3bE");
+        MapKitFactory.setApiKey("${YANDEX_MAPS_API_KEY}");
         MapKitFactory.initialize(this);
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
