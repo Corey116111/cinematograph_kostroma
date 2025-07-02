@@ -37,6 +37,15 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.RadioButton;
 
+import com.yandex.mapkit.map.CircleMapObject;
+import com.yandex.mapkit.map.MapObjectCollection;
+import com.yandex.mapkit.geometry.Point;
+import com.yandex.mapkit.Animation;
+import com.yandex.mapkit.MapKitFactory;
+import com.yandex.mapkit.geometry.Circle;
+import com.yandex.mapkit.map.CameraPosition;
+import com.yandex.mapkit.mapview.MapView;
+
 public class TaskActivity extends AppCompatActivity {
     private static final int LOCATION_PERMISSION_REQUEST = 1001;
     private LocationNotifier locationNotifier;
@@ -54,8 +63,13 @@ public class TaskActivity extends AppCompatActivity {
     private TestData currentTest;
     private int currentQuestionIndex = 0;
 
+    private MapView mapView;
+    private boolean mapInitialized = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        MapKitFactory.setApiKey("AQVN3GNujXfRDTbrB5LiVkcH6UXwG_rH_EKSp3bE");
+        MapKitFactory.initialize(this);
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_task);
@@ -106,6 +120,12 @@ public class TaskActivity extends AppCompatActivity {
         hintButton = findViewById(R.id.hintButton);
         atPlaceButton = findViewById(R.id.atPlaceButton);
         menuButton = findViewById(R.id.menuButton);
+        mapView = findViewById(R.id.mapView);
+        mapView.getMap().move(
+                new CameraPosition(new Point(0, 0), 1, 0, 0),
+                new Animation(Animation.Type.SMOOTH, 0),
+                null
+        );
     }
 
     private void setupTestData() {
@@ -190,7 +210,7 @@ public class TaskActivity extends AppCompatActivity {
     }
 
     private void switchHint() {
-        hintStep = (hintStep + 1) % 4;
+        hintStep = (hintStep + 1) % 5;
         updateHint();
     }
 
@@ -227,11 +247,84 @@ public class TaskActivity extends AppCompatActivity {
                 // Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/raw/" + currentTest.getVideoUrl());
                 // videoView.setVideoURI(videoUri);
                 // videoView.start();
-            } else {
+            }
+             else if (hintStep == 4)
+            {
+                showMapHint();
+            }
+            else
+            {
                 hintStep = 0;
                 updateHint();
             }
         }
+    }
+
+    private void showMapHint() {
+        // Скрываем все остальные элементы
+        disortedImageView.setVisibility(View.GONE);
+        originalImageView.setVisibility(View.GONE);
+        videoView.setVisibility(View.GONE);
+        textHintView.setVisibility(View.GONE);
+
+        // Показываем карту
+        mapView.setVisibility(View.VISIBLE);
+
+        if (!mapInitialized) {
+            initializeMap();
+            mapInitialized = true;
+        }
+        mapView.requestLayout();
+    }
+
+    private void initializeMap() {
+        try {
+            Point targetPoint = new Point(
+                    currentTest.getTargetLat(),
+                    currentTest.getTargetLng()
+            );
+
+            // Настройка камеры
+            mapView.getMap().move(
+                    new CameraPosition(targetPoint, 15f, 0f, 0f),
+                    new Animation(Animation.Type.SMOOTH, 1f),
+                    null
+            );
+
+            // Добавляем маркер
+            MapObjectCollection mapObjects = mapView.getMap().getMapObjects();
+            mapObjects.addPlacemark(targetPoint);
+
+            // Добавляем круг радиуса
+            CircleMapObject circle = mapObjects.addCircle(
+                    new Circle(targetPoint, currentTest.getRadiusMeters())
+            );
+            circle.setFillColor(0x60FF0000);
+            circle.setStrokeColor(0xFF0000);
+            circle.setStrokeWidth(2f);
+
+        } catch (Exception e) {
+            Log.e("MAP_ERROR", "Error initializing map", e);
+            Toast.makeText(this, "Ошибка загрузки карты", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        MapKitFactory.getInstance().onStart();
+        if (mapView != null) {
+            mapView.onStart();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        if (mapView != null) {
+            mapView.onStop();
+        }
+        MapKitFactory.getInstance().onStop();
+        super.onStop();
     }
 
     private void showQuestionDialog() {
@@ -375,6 +468,9 @@ public class TaskActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (mapView != null) {
+            mapView = null;
+        }
         if (locationNotifier != null) {
             try {
                 locationNotifier.stop();

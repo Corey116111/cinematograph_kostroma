@@ -32,7 +32,9 @@ android {
 }
 
 dependencies {
-
+    implementation(libs.activity.ktx)
+    //noinspection Aligned16KB
+    implementation("com.yandex.android:maps.mobile:4.17.0-full")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)

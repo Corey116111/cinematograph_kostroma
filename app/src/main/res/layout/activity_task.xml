@@ -76,7 +76,14 @@
                     android:id="@+id/videoView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
                     android:visibility="gone"/>
+                <com.yandex.mapkit.mapview.MapView
+                    android:id="@+id/mapView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone" />
                 <TextView
                     android:id="@+id/textHintView"
                     android:layout_width="match_parent"
