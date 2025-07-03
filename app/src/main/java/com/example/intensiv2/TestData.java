@@ -15,17 +15,18 @@ public class TestData implements Serializable {
     private String disortedImage;
     private String videoUrl;
     private String textHint;
+    private String audioUrl;
     private String[] options;
 
     public TestData(String title, String[] hintImages,
                    String question, String correctAnswer, 
-                   double targetLat, double targetLng, float radiusMeters, int testId, String originalImage, String disortedImage, String videoUrl, String textHint) {
-        this(title, hintImages, question, correctAnswer, targetLat, targetLng, radiusMeters, testId, originalImage, disortedImage, videoUrl, textHint, null);
+                   double targetLat, double targetLng, float radiusMeters, int testId, String originalImage, String disortedImage, String videoUrl, String textHint, String audioUrl) {
+        this(title, hintImages, question, correctAnswer, targetLat, targetLng, radiusMeters, testId, originalImage, disortedImage, videoUrl, textHint, null, audioUrl);
     }
 
     public TestData(String title, String[] hintImages,
                    String question, String correctAnswer,
-                   double targetLat, double targetLng, float radiusMeters, int testId, String originalImage, String disortedImage, String videoUrl, String textHint, String[] options) {
+                   double targetLat, double targetLng, float radiusMeters, int testId, String originalImage, String disortedImage, String videoUrl, String textHint, String[] options, String audioUrl) {
         this.title = title;
         this.hintImages = hintImages;
         this.question = question;
@@ -39,6 +40,7 @@ public class TestData implements Serializable {
         this.videoUrl = videoUrl;
         this.textHint = textHint;
         this.options = options;
+        this.audioUrl = audioUrl;
     }
 
     //геттеры
@@ -53,6 +55,8 @@ public class TestData implements Serializable {
     public String getDistortedImage() { return disortedImage; }
     public String getOriginalImage() { return originalImage; }
     public String getVideoUrl() { return videoUrl; }
+    public String getAudioUrl() { return audioUrl; }
     public String getTextHint() { return textHint; }
+
     public String[] getOptions() { return options; }
 }

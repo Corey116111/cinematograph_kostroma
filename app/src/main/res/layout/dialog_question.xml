@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="#F7F3E7"
@@ -32,7 +32,7 @@
         android:id="@+id/dialogAnswerInput"
         android:layout_gravity="bottom|start"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
         android:maxLength="30"
         android:background="@drawable/edittext_border"
@@ -49,29 +49,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:weightSum="2"
-        android:gravity="start|center_vertical">
+        android:gravity="center">
 
         <ImageView
             android:id="@+id/dialogCancel"
-            android:layout_width="wrap_content"
-            android:layout_height="45dp"
-            android:layout_marginEnd="32dp"
-            android:layout_weight="1"
+            android:layout_width="120dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="8dp"
             android:background="@drawable/button_back"
-            android:scaleType="center"
-            android:text="НАЗАД" />
+            android:scaleType="center" />
 
         <ImageView
             android:id="@+id/dialogCheck"
-            android:layout_width="wrap_content"
-            android:layout_height="45dp"
-            android:layout_marginLeft="32dp"
-            android:layout_weight="1"
+            android:layout_width="120dp"
+            android:layout_height="40dp"
             android:background="@drawable/button_check"
-            android:scaleType="center"
-            android:text="ПРОВЕРИТЬ"
-            android:textAllCaps="false"
-            android:textColor="#fff" />
-    </LinearLayout>
+            android:scaleType="center" />
+    </LinearLayout>                         
 </LinearLayout>

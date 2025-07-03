@@ -7,73 +7,74 @@ import java.util.Arrays;
 
 public class TestManager {
     public static class QuestData {
-        private String novelText; // текст новеллы
         private List<TestData> questions; // список вопросов
         private List<String> placeInfoBgNames;
         private String finalImage;
+        private String ticketInfoImage;
 
-        public QuestData(String novelText, List<TestData> questions, List<String> placeInfoBgNames, String finalImage) {
-            this.novelText = novelText;
+        public QuestData(List<TestData> questions, List<String> placeInfoBgNames, String finalImage, String ticketInfoImage) {
             this.questions = questions;
             this.placeInfoBgNames = placeInfoBgNames;
             this.finalImage = finalImage;
+            this.ticketInfoImage = ticketInfoImage;
         }
-        public String getNovelText() { return novelText; }
         public List<TestData> getQuestions() { return questions; }
         public List<String> getPlaceInfoBgNames() { return placeInfoBgNames; }
         public String getFinalImage() { return finalImage; }
+        public String getTicketInfoImage() { return ticketInfoImage; }
     }
 
     private static final Map<Integer, QuestData> quests = new HashMap<>();
     
     static {
         // Пример для "Жестокий романс"
-        String novelText = "Вы перенесетесь в XIX век — эпоху жгучих страстей и томительных романов, где в душном воздухе купеческих домов витают ароматы крепкого чая и неразделённой любви.\n\nПеред вами откроется Волга — величавая и безмятежная, а старинный приволжский городок, словно сошедший с полотен Левитана, погрузит в атмосферу ностальгии по местам, кажущимся до боли знакомыми. Здесь каждый шёпот волн, каждый отсвет заката в оконных стёклах дышит поэзией русского жестокого романа.";
         TestData romansQuestion = new TestData(
                 "ЖЕСТОКИЙ РОМАНС",
                 new String[]{"romans_hint1"},
                 "Как много шагов по лестнице отделяет нас от мгновения, остановленного кадре фильма? Сосчитайте количество шагов по лестнице, с места отрывка фильма",
-                "13",
+                "12",
                 57.7679, 40.9269, 25f, 1,
                 "originalromans1",
                 "disortedromans1",
                 "gerb",
-                "Как драгоценная реликвия в ладонях, главный символ Костромы покоится на ее гербе"
+                "Как драгоценная реликвия в ладонях, главный символ Костромы покоится на ее гербе",
+                ""
         );
         TestData romansQuestion2 = new TestData(
                 "ЖЕСТОКИЙ РОМАНС",
                 new String[]{"romans_hint2"},
                 "Сколько изящных колонн украшают беседку Островского, если от общего числа ажурных перильных опор отнять массивные несущие столбы?",
-                "7",
+                "17",
                 57.7679, 40.9269, 25f, 2,
                 "originalromans2",
                 "distortedromans2",
                 "besedka",
-                "Очаровательный уголок Костромы, место, где некогда замирал в восхищении перед волжскими просторами сам Александр Островский..."
+                "Очаровательный уголок Костромы, место, где некогда замирал в восхищении перед волжскими просторами сам Александр Островский...",
+                ""
         );
         TestData romansQuestion3 = new TestData(
                 "ЖЕСТОКИЙ РОМАНС",
                 new String[]{"romans_hint3"},
                 "Что же это за величественное строение, что возвышается перед вами? \n",
-                "старая пристань",
+                "старая пристань", // сделать потом ToLower() к инпутам
                 57.7679, 40.9269, 25f, 2,
                 "originalromans3",
                 "distortedromans3",
                 "pristan",
-                "Как страж веков, это здание гордо высится над седыми водами Волги-матушки, овеянное дыханием истории"
+                "Как страж веков, это здание гордо высится над седыми водами Волги-матушки, овеянное дыханием истории",
+                ""
         );
-        String finalImageRomans = "finalimagegorkiy";
+        String finalImageRomans = "finalimageromans";
+        String ticketInfoImageRomans = "ticketromans";
         quests.put(2, new QuestData(
-                novelText,
                 Arrays.asList(romansQuestion, romansQuestion2, romansQuestion3), //тестовая информация
                 Arrays.asList("novell1","bg_task1", "bg_task2","bg_task3"), //картинки для текстовой информации
-                finalImageRomans
+                finalImageRomans,
+                ticketInfoImageRomans
         ));
         //endregion
 
         //region ГОРЬКИЙ 53
-        String gorkiyNovel = "1953 год. Горький. Закрытый город, где тени прошлого длиннее настоящего... Здесь, среди шепота стен и тревожных сводок, расследуется убийство, всколыхнувшее тишину послевоенных лет. Но сам Горький тех лет почти исчез под слоями времени.\n" +
-                "А знаешь, где ожил этот детектив из эпохи стали и страха? Здесь. В Костроме. Она стала его двойником, его кинематографической машиной времени. Каждый кадр сериала – камень в мостовой этого города.\n";
         TestData gorkiyQuestion = new TestData(
                 "ГОРЬКИЙ 53",
                 new String[]{"gorkiy_hint1"},
@@ -84,7 +85,8 @@ public class TestManager {
                 "distortedgorkiy1",
                 "muzey",
                 "Эхо из 1953: Это самая длинная пешеходная улица Костромы. Для съемок перекрыли 500 метров и пустили ретро-трамвай, которого никогда не было!",
-                new String[]{"Художественный музей", "Театр Островского", "Дворянское собрание"}
+                new String[]{"Художественный музей", "Театр Островского", "Дворянское собрание"},
+                ""
         );
         TestData gorkiyQuestion2 = new TestData(
                 "ГОРЬКИЙ 53",
@@ -95,32 +97,33 @@ public class TestManager {
                 "originalgorkiy2",
                 "distortedgorkiy2",
                 "simon",
-                "Улица, где в 1985-м висела растяжка «Миру — мир!». Сейчас её нет, но остались старинные фонари и дома с лепниной"
+                "Улица, где в 1985-м висела растяжка «Миру — мир!». Сейчас её нет, но остались старинные фонари и дома с лепниной",
+                ""
         );
         TestData gorkiyQuestion3 = new TestData(
                 "ГОРЬКИЙ 53",
                 new String[]{"gorkiy_hint3"},
-                "Сколько арочных окон на втором ярусе каланчи?",
-                "6",
+                "Как называется здание перед вами?",
+                "гауптвахта",
                 55.751244, 37.618423, 20f, 1,
                 "originalgorkiy3",
                 "distortedgorkiy3",
                 "gaup",
                 "Высоченная башня с часами, где в 1953-м встречали поезда. В реальности она тушила огонь, а не встречала гостей",
-                new String[]{"4", "6", "8"}
+                new String[]{"Филармония", "Каланча", "Гауптвахта"},
+                ""
         );
         String finalImageGorkiy = "finalimagegorkiy";
+        String ticketInfoImageGorkiy = "ticketgorkiy";
         quests.put(1, new QuestData(
-                gorkiyNovel,
                 Arrays.asList(gorkiyQuestion, gorkiyQuestion2, gorkiyQuestion3),
                 Arrays.asList("bg_gorkiy1", "bg_gorkiy2", "bg_gorkiy3", "bg_gorkiy4"),
-                finalImageGorkiy
+                finalImageGorkiy,
+                ticketInfoImageGorkiy
         ));
         //endregion
 
         //region ЗЛЫЕ ЛЮДИ
-        String evilNovel = "Конец XIX века раскроет перед вами свои тайны: вы станете частью расследования громкого и загадочного преступления, шагните в самые тёмные уголки этой истории… \n" +
-                "или сумеете обойти её глухие закоулки…\n";
         TestData evilQuestion = new TestData(
                 "ЗЛЫЕ ЛЮДИ",
                 new String[]{"evil_hint1"},
@@ -131,7 +134,8 @@ public class TestManager {
                 "evildistorted3",
                 "handshake",
                 "Врата открываются там, где возвышается башня Молочных рядов, взирая на тебя с величественным спокойствием.",
-                new String[] {"Часовня,","Крыша с флюгером", "Колокольня", "Шпиль с острым навершием"}
+                new String[] {"Часовня","Крыша с флюгером", "Колокольня", "Шпиль с острым навершием"},
+                ""
         );
         TestData evilQuestion2 = new TestData(
                 "ЗЛЫЕ ЛЮДИ",
@@ -143,7 +147,8 @@ public class TestManager {
                 "evildistorted1",
                 "womens",
                 "Место, где переплелись древняя культура Костромы, сочная гастрономия чебуреков и стихия моды в мелочных рядов",
-                new String[]{"да", "нет"}
+                new String[]{"Да", "Нет"},
+                ""
         );
         TestData evilQuestion3 = new TestData(
                 "ЗЛЫЕ ЛЮДИ",
@@ -155,14 +160,16 @@ public class TestManager {
                 "evildistorted2",
                 "peopleonstage",
                 "Места суть там, где возвышается храм Спаса в Рядах",
-                new String[]{"1", "5", "6", "7"}
+                new String[]{"1", "5", "6", "7"},
+                ""
         );
-        String finalImageEvil = "finalimagegorkiy";
+        String finalImageEvil = "finalimageevil";
+        String ticketInfoImageEvil = "ticketevil";
         quests.put(3, new QuestData(
-                evilNovel,
                 Arrays.asList(evilQuestion, evilQuestion2, evilQuestion3),
                 Arrays.asList("evilnovell", "bg_placevil1", "bg_placevil2", "bg_placevil3"),
-                finalImageEvil
+                finalImageEvil,
+                ticketInfoImageEvil
         ));
         //endregion
     }

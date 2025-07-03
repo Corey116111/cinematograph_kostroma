@@ -6,8 +6,11 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -17,7 +20,9 @@ import android.widget.Toast;
 import android.content.Intent;
 import android.net.Uri;
 import android.widget.VideoView;
-
+import android.provider.Settings;
+import android.location.Location;
+import android.location.LocationManager;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -37,6 +42,15 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.RadioButton;
 
+import com.yandex.mapkit.map.CircleMapObject;
+import com.yandex.mapkit.map.MapObjectCollection;
+import com.yandex.mapkit.geometry.Point;
+import com.yandex.mapkit.Animation;
+import com.yandex.mapkit.MapKitFactory;
+import com.yandex.mapkit.geometry.Circle;
+import com.yandex.mapkit.map.CameraPosition;
+import com.yandex.mapkit.mapview.MapView;
+
 public class TaskActivity extends AppCompatActivity {
     private static final int LOCATION_PERMISSION_REQUEST = 1001;
     private LocationNotifier locationNotifier;
@@ -53,6 +67,9 @@ public class TaskActivity extends AppCompatActivity {
     private TestManager.QuestData currentQuest;
     private TestData currentTest;
     private int currentQuestionIndex = 0;
+
+    private MapView mapView;
+    private boolean mapInitialized = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +123,12 @@ public class TaskActivity extends AppCompatActivity {
         hintButton = findViewById(R.id.hintButton);
         atPlaceButton = findViewById(R.id.atPlaceButton);
         menuButton = findViewById(R.id.menuButton);
+        mapView = findViewById(R.id.mapView);
+        mapView.getMap().move(
+                new CameraPosition(new Point(0, 0), 1, 0, 0),
+                new Animation(Animation.Type.SMOOTH, 0),
+                null
+        );
     }
 
     private void setupTestData() {
@@ -190,7 +213,7 @@ public class TaskActivity extends AppCompatActivity {
     }
 
     private void switchHint() {
-        hintStep = (hintStep + 1) % 4;
+        hintStep = (hintStep + 1) % 5;
         updateHint();
     }
 
@@ -201,18 +224,24 @@ public class TaskActivity extends AppCompatActivity {
         textHintView.setVisibility(View.GONE);
         //taskTextView.setVisibility(View.GONE);
 
-        if (hintStep == 0) {
+        if (hintStep == 0)
+        {
             disortedImageView.setVisibility(View.VISIBLE);
             int resId = TestManager.getDrawableResourceId(currentTest.getDistortedImage());
             disortedImageView.setImageResource(resId);
-        } else if (hintStep == 1) {
+        }
+        else if (hintStep == 1)
+        {
             originalImageView.setVisibility(View.VISIBLE);
             int resId = TestManager.getDrawableResourceId(currentTest.getOriginalImage());
             originalImageView.setImageResource(resId);
-        } else if (hintStep == 2) {
+        }
+        else if (hintStep == 2)
+        {
             textHintView.setVisibility(View.VISIBLE);
             textHintView.setText(currentTest.getTextHint());
-        } else if (hintStep == 3) {
+        }
+        else if (hintStep == 3) { // добавить 4 подсказку - координаты места
             if (currentTest.getVideoUrl() != null || !currentTest.getVideoUrl().isEmpty()) {
                 videoView.setVisibility(View.VISIBLE);
                 Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/raw/" + currentTest.getVideoUrl());
@@ -227,11 +256,160 @@ public class TaskActivity extends AppCompatActivity {
                 // Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/raw/" + currentTest.getVideoUrl());
                 // videoView.setVideoURI(videoUri);
                 // videoView.start();
-            } else {
-                hintStep = 0;
-                updateHint();
             }
         }
+        else if (hintStep == 4)
+        {
+          showMapHint();
+        }
+        else
+        {
+                hintStep = 0;
+                updateHint();
+        }
+    }
+
+    private void showMapHint() {
+        // Скрываем все остальные элементы
+        disortedImageView.setVisibility(View.GONE);
+        originalImageView.setVisibility(View.GONE);
+        videoView.setVisibility(View.GONE);
+        textHintView.setVisibility(View.GONE);
+
+        // Показываем карту
+        mapView.setVisibility(View.VISIBLE);
+
+        if (!mapInitialized) {
+            initializeMap();
+            mapInitialized = true;
+        }
+        mapView.requestLayout();
+    }
+
+    private void initializeMap() {
+        try {
+            // Проверяем инициализацию MapKit
+            if (mapView == null) {
+                Toast.makeText(this, "Ошибка: MapView не инициализирован", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Целевая точка
+            Point targetPoint = new Point(57.769617, 40.929763);
+
+            // Настройка камеры
+            mapView.getMap().move(
+                    new CameraPosition(targetPoint, 15f, 0f, 0f),
+                    new Animation(Animation.Type.SMOOTH, 1f),
+                    null
+            );
+
+            // Добавляем объекты на карту
+            MapObjectCollection mapObjects = mapView.getMap().getMapObjects();
+            mapObjects.addPlacemark(targetPoint);
+
+            CircleMapObject circle = mapObjects.addCircle(
+                    new Circle(targetPoint, currentTest.getRadiusMeters())
+            );
+            circle.setFillColor(0x60FF0000);
+            circle.setStrokeColor(0xFF0000);
+            circle.setStrokeWidth(2f);
+
+            // Проверка интернет-соединения
+            if (!isNetworkAvailable()) {
+                Toast.makeText(this, "Нет интернет-соединения", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            checkAndShowUserLocation();
+
+        } catch (Exception e) {
+            Log.e("MAP_ERROR", "Map initialization failed", e);
+            Toast.makeText(this, "Ошибка загрузки карты", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    private void checkAndShowUserLocation() {
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST);
+            return;
+        }
+
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        // Проверяем, включен ли GPS
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            // Показываем диалог с предложением включить GPS
+            new AlertDialog.Builder(this)
+                    .setTitle("Требуется GPS")
+                    .setMessage("Для отображения вашего местоположения включите GPS")
+                    .setPositiveButton("Включить", (dialog, which) -> {
+                        // Открываем настройки местоположения
+                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+
+                        // Запускаем проверку снова через 2 секунды
+                        new Handler().postDelayed(() -> {
+                            if (mapView != null) {
+                                checkAndShowUserLocation();
+                            }
+                        }, 2000);
+                    })
+                    .setNegativeButton("Продолжить без GPS", null)
+                    .show();
+            return;
+        }
+
+        // Если GPS включен, пытаемся получить местоположение
+        try {
+            android.location.Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+            if (lastKnownLocation != null) {
+                // Текущая позиция пользователя
+                Point userPoint = new Point(
+                        lastKnownLocation.getLatitude(),
+                        lastKnownLocation.getLongitude()
+                );
+
+                // Добавляем маркер текущего местоположения
+                MapObjectCollection mapObjects = mapView.getMap().getMapObjects();
+                mapObjects.addPlacemark(userPoint);
+
+            } else {
+                // Если местоположение не получено, пробуем еще раз через 1 секунду
+                new Handler().postDelayed(() -> {
+                    if (mapView != null) {
+                        checkAndShowUserLocation();
+                    }
+                }, 1000);
+            }
+        } catch (SecurityException e) {
+            Log.e("GPS", "Permission error", e);
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        MapKitFactory.getInstance().onStart();
+        if (mapView != null) {
+            mapView.onStart();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        if (mapView != null) {
+            mapView.onStop();
+        }
+        MapKitFactory.getInstance().onStop();
+        super.onStop();
     }
 
     private void showQuestionDialog() {
@@ -375,6 +553,9 @@ public class TaskActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (mapView != null) {
+            mapView = null;
+        }
         if (locationNotifier != null) {
             try {
                 locationNotifier.stop();

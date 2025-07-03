@@ -120,7 +120,7 @@ public class main_menu_activity extends AppCompatActivity {
     {
         Intent intent = new Intent(this, QuestIntroActivity.class);
         intent.putExtra(TestConstants.EXTRA_TEST_ID, TestConstants.TEST_GORKIY);
-        intent.putExtra(QuestIntroActivity.EXTRA_SCREEN_TYPE, "intro");
+        intent.putExtra(QuestIntroActivity.EXTRA_SCREEN_TYPE, "ticketinfo");
         startActivity(intent);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
@@ -129,7 +129,7 @@ public class main_menu_activity extends AppCompatActivity {
     {
         Intent intent = new Intent(this, QuestIntroActivity.class);
         intent.putExtra(TestConstants.EXTRA_TEST_ID, TestConstants.TEST_ROMANS);
-        intent.putExtra(QuestIntroActivity.EXTRA_SCREEN_TYPE, "intro");
+        intent.putExtra(QuestIntroActivity.EXTRA_SCREEN_TYPE, "ticketinfo");
         startActivity(intent);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
@@ -138,7 +138,7 @@ public class main_menu_activity extends AppCompatActivity {
     {
         Intent intent = new Intent(this, QuestIntroActivity.class);
         intent.putExtra(TestConstants.EXTRA_TEST_ID, TestConstants.TEST_EVIL_PEOPLE);
-        intent.putExtra(QuestIntroActivity.EXTRA_SCREEN_TYPE, "intro");
+        intent.putExtra(QuestIntroActivity.EXTRA_SCREEN_TYPE, "ticketinfo");
         startActivity(intent);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }

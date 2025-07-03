@@ -18,6 +18,8 @@ public class QuestIntroActivity extends AppCompatActivity {
 
     private ImageView nextButton;
     private ImageButton soundButton;
+    private Button startQuestButton;
+    private Button backButton;
     private int questId;
     private TestManager.QuestData questData;
     private String screenType;
@@ -31,6 +33,8 @@ public class QuestIntroActivity extends AppCompatActivity {
         enableFullscreen();
         nextButton = findViewById(R.id.nextButton);
         soundButton = findViewById(R.id.soundButton);
+        startQuestButton = findViewById(R.id.startQuestButton);
+        backButton = findViewById(R.id.backButton);
 
         questId = getIntent().getIntExtra(TestConstants.EXTRA_TEST_ID, TestConstants.TEST_GORKIY);
         screenType = getIntent().getStringExtra(EXTRA_SCREEN_TYPE);
@@ -42,13 +46,39 @@ public class QuestIntroActivity extends AppCompatActivity {
             return;
         }
 
+        // По умолчанию скрываем новые кнопки
+        startQuestButton.setVisibility(View.GONE);
+        backButton.setVisibility(View.GONE);
+
         // Устанавливаем фон из TestManager
         setBackgroundFromTestManager();
 
         //выбираем текст и заголовок
-        if ("placeinfo".equals(screenType)) {
+        if ("ticketinfo".equals(screenType)) {
+            // Показываем только на экране ticketinfo
+            startQuestButton.setVisibility(View.VISIBLE);
+            backButton.setVisibility(View.VISIBLE);
+            nextButton.setVisibility(View.GONE);
+            soundButton.setVisibility(View.GONE);
+
+            startQuestButton.setOnClickListener(v -> {
+                Intent intent = new Intent(this, QuestIntroActivity.class);
+                intent.putExtra(EXTRA_SCREEN_TYPE, "intro");
+                intent.putExtra(TestConstants.EXTRA_TEST_ID, questId);
+                startActivity(intent);
+                finish();
+            });
+
+            backButton.setOnClickListener(v -> {
+                Intent intent = new Intent(this, main_menu_activity.class);
+                startActivity(intent);
+                finish();
+            });
+        } else if ("placeinfo".equals(screenType)) {
             //экран после вопроса
+            nextButton.setEnabled(false);
             nextButton.setOnClickListener(v -> {
+                v.setEnabled(false);
                 //переходим к следующему вопросу в TaskActivity
                 int nextQuestionIndex = questionIndex + 1;
                 if (nextQuestionIndex < questData.getQuestions().size()) {
@@ -65,6 +95,9 @@ public class QuestIntroActivity extends AppCompatActivity {
                     finish();
                 }
             });
+            nextButton.setEnabled(true);
+            soundButton.setVisibility(View.VISIBLE);
+            nextButton.setVisibility(View.VISIBLE);
         } else {
             //обычный intro (новелла)
             nextButton.setOnClickListener(v -> {
@@ -74,6 +107,9 @@ public class QuestIntroActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             });
+            nextButton.setEnabled(true);
+            soundButton.setVisibility(View.VISIBLE);
+            nextButton.setVisibility(View.VISIBLE);
         }
         // soundButton хз зачем кнопка на макете но можно будет добавить че там хотели
     }
@@ -106,7 +142,10 @@ public class QuestIntroActivity extends AppCompatActivity {
             if (questData != null && questData.getPlaceInfoBgNames() != null && !questData.getPlaceInfoBgNames().isEmpty()) {
                 String bgImageName = null;
 
-                if ("placeinfo".equals(screenType)) {
+                if("ticketinfo".equals(screenType)){
+                    bgImageName = questData.getTicketInfoImage();
+                }
+                else if ("placeinfo".equals(screenType)) {
                     // Для экрана информации о месте используем изображение по индексу вопроса + 1
                     // (индекс 0 - для intro, индексы 1+ для placeinfo экранов)
                     int bgIndex = questionIndex + 1;
