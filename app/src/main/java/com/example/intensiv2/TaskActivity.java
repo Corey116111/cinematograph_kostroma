@@ -7,6 +7,28 @@ import com.yandex.mapkit.directions.driving.DrivingRoute;
 import com.yandex.mapkit.directions.driving.DrivingRouterType;
 import com.yandex.mapkit.directions.driving.DrivingSession;
 import com.yandex.mapkit.map.MapObject;
+import com.yandex.mapkit.MapKitFactory;
+import com.yandex.mapkit.RequestPoint;
+import com.yandex.mapkit.RequestPointType;
+import com.yandex.mapkit.directions.DirectionsFactory;
+import com.yandex.mapkit.directions.driving.DrivingRoute;
+import com.yandex.mapkit.directions.driving.DrivingRouter;
+import com.yandex.mapkit.directions.driving.DrivingRouterType;
+import com.yandex.mapkit.directions.driving.DrivingSession;
+import com.yandex.mapkit.directions.driving.VehicleOptions;
+import com.yandex.mapkit.geometry.Point;
+import com.yandex.mapkit.layers.ObjectEvent;
+import com.yandex.mapkit.map.CameraPosition;
+import com.yandex.mapkit.map.IconStyle;
+import com.yandex.mapkit.map.MapObjectCollection;
+import com.yandex.mapkit.map.PlacemarkMapObject;
+import com.yandex.mapkit.map.PolylineMapObject;
+import com.yandex.mapkit.mapview.MapView;
+import com.yandex.mapkit.user_location.UserLocationLayer;
+import com.yandex.mapkit.user_location.UserLocationObjectListener;
+import com.yandex.mapkit.user_location.UserLocationView;
+import com.yandex.runtime.Error;
+import com.yandex.runtime.image.ImageProvider;
 import com.yandex.mapkit.map.MapObjectCollection;
 import com.yandex.mapkit.map.PlacemarkMapObject;
 import com.yandex.mapkit.map.IconStyle;
@@ -329,60 +351,53 @@ public class TaskActivity extends AppCompatActivity {
             MapObjectCollection mapObjects = mapView.getMap().getMapObjects();
             mapObjects.clear();
 
-            Point targetPoint = new Point(currentTest.getTargetLat(), currentTest.getTargetLng());
+            // 1. Целевая точка (фиксированные координаты)
+            Point targetPoint = new Point(57.769617, 40.929763);
+            addTargetMarker(targetPoint);
 
-            // Целевая точка
-            PlacemarkMapObject targetPlacemark = mapObjects.addPlacemark(targetPoint);
-            targetPlacemark.setIcon(ImageProvider.fromResource(this, R.drawable.ic_target_marker));
-            targetPlacemark.setIconStyle(new IconStyle()
-                    .setAnchor(new PointF(0.5f, 1.0f))
-                    .setScale(0.1f)
-                    .setZIndex(10f));
-
-            // Анимация маркера цели
-            animateMarkerAppearance(targetPlacemark, 800);
-            startTargetPulsing(targetPlacemark);
-
-            // Круг зоны вокруг цели
-            CircleMapObject circle = mapObjects.addCircle(new Circle(targetPoint, currentTest.getRadiusMeters()));
-            circle.setFillColor(0x22FF0000);
-            circle.setStrokeColor(0x99FF0000);
-            circle.setStrokeWidth(3f);
-            circle.setZIndex(1f);
-
-            // Проверяем местоположение пользователя
+            // 2. Точка пользователя (текущее местоположение)
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                 Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
                 if (lastKnownLocation != null) {
                     Point userPoint = new Point(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
-
-                    // Используем метод addUserMarker для добавления маркера пользователя
                     addUserMarker(userPoint);
 
-                    // Показываем расстояние до цели
+                    // 3. Показываем расстояние между точками
                     showDistance(userPoint, targetPoint);
 
-                    // Прокладываем маршрут
+                    // 4. Строим маршрут (если есть интернет)
                     if (isNetworkAvailable()) {
                         requestRoute(userPoint, targetPoint);
                     }
+                } else {
+                    Toast.makeText(this, "Не удалось определить ваше местоположение", Toast.LENGTH_SHORT).show();
                 }
             }
 
-            // Настройка камеры
-            mapView.getMap().move(
-                    new CameraPosition(targetPoint, 15f, 30f, 0f),
-                    new Animation(Animation.Type.SMOOTH, 1f),
-                    null
-            );
+            // 5. Настраиваем камеру, чтобы показать обе точки
+            setupCamera(targetPoint);
 
         } catch (Exception e) {
             Log.e("MAP_INIT", "Error: " + e.getMessage());
             Toast.makeText(this, "Ошибка инициализации карты", Toast.LENGTH_LONG).show();
         }
     }
+
+    private void addTargetMarker(Point point) {
+        MapObjectCollection mapObjects = mapView.getMap().getMapObjects();
+        PlacemarkMapObject targetPlacemark = mapObjects.addPlacemark(point);
+        targetPlacemark.setIcon(ImageProvider.fromResource(this, R.drawable.ic_target_marker));
+        targetPlacemark.setIconStyle(new IconStyle()
+                .setAnchor(new PointF(0.5f, 0.5f))
+                .setScale(1.0f)
+                .setZIndex(10f));
+
+        // Анимация маркера
+        startTargetPulsing(targetPlacemark);
+    }
+
 
     private void requestRoute(Point from, Point to) {
         try {
@@ -454,16 +469,37 @@ public class TaskActivity extends AppCompatActivity {
         );
     }
 
-    private void addUserMarker(Point userPoint) {
+    private void addUserMarker(Point point) {
         MapObjectCollection mapObjects = mapView.getMap().getMapObjects();
-        PlacemarkMapObject userPlacemark = mapObjects.addPlacemark(userPoint);
+        PlacemarkMapObject userPlacemark = mapObjects.addPlacemark(point);
         userPlacemark.setIcon(ImageProvider.fromResource(this, R.drawable.ic_user_marker));
         userPlacemark.setIconStyle(new IconStyle()
-                .setAnchor(new PointF(0.5f, 1.0f))
-                .setScale(0.1f)
+                .setAnchor(new PointF(0.5f, 0.5f))
+                .setScale(1.0f)
                 .setZIndex(10f));
 
+        // Анимация появления
         animateMarkerAppearance(userPlacemark, 800);
+    }
+
+    private void setupCamera(Point targetPoint) {
+        // Получаем текущую позицию камеры
+        CameraPosition currentCameraPosition = mapView.getMap().getCameraPosition();
+
+        // Создаем новую позицию камеры с центром в целевой точке
+        CameraPosition newCameraPosition = new CameraPosition(
+                targetPoint,
+                15f,  // zoom
+                30f,  // azimuth
+                0f    // tilt
+        );
+
+        // Анимированное перемещение камеры
+        mapView.getMap().move(
+                newCameraPosition,
+                new Animation(Animation.Type.SMOOTH, 1f),
+                null
+        );
     }
 
     private void animateMarkerAppearance(PlacemarkMapObject marker, long duration) {

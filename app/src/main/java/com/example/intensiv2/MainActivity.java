@@ -14,6 +14,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.yandex.mapkit.MapKitFactory;
+import com.yandex.mapkit.directions.DirectionsFactory;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         MapKitFactory.setApiKey("30b5db23-7e43-469b-953d-937b344aa497");
         MapKitFactory.initialize(this);
+        DirectionsFactory.initialize(this);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
         enableFullscreen();
