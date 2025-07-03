@@ -1,5 +1,26 @@
 package com.example.intensiv2;
 
+import com.yandex.mapkit.RequestPointType;
+import com.yandex.mapkit.directions.Directions;
+import com.yandex.mapkit.directions.DirectionsFactory;
+import com.yandex.mapkit.directions.driving.DrivingRoute;
+import com.yandex.mapkit.directions.driving.DrivingRouterType;
+import com.yandex.mapkit.directions.driving.DrivingSession;
+import com.yandex.mapkit.map.MapObject;
+import com.yandex.mapkit.map.MapObjectCollection;
+import com.yandex.mapkit.map.PlacemarkMapObject;
+import com.yandex.mapkit.map.IconStyle;
+import com.yandex.mapkit.map.PolylineMapObject;
+import com.yandex.runtime.image.ImageProvider;
+import android.animation.ValueAnimator;
+import android.graphics.PointF;
+import android.view.animation.OvershootInterpolator;
+import com.google.android.material.snackbar.Snackbar;
+import com.yandex.mapkit.map.IconStyle;
+import com.yandex.mapkit.transport.TransportFactory;
+import com.yandex.mapkit.geometry.Polyline;
+import com.yandex.mapkit.geometry.BoundingBox;
+import android.graphics.Color;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -11,6 +32,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -42,6 +64,10 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.RadioButton;
 
+import com.yandex.mapkit.RequestPoint;
+import com.yandex.mapkit.directions.driving.DrivingOptions;
+import com.yandex.mapkit.directions.driving.DrivingRouter;
+import com.yandex.mapkit.directions.driving.VehicleOptions;
 import com.yandex.mapkit.map.CircleMapObject;
 import com.yandex.mapkit.map.MapObjectCollection;
 import com.yandex.mapkit.geometry.Point;
@@ -49,7 +75,14 @@ import com.yandex.mapkit.Animation;
 import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.geometry.Circle;
 import com.yandex.mapkit.map.CameraPosition;
+import com.yandex.mapkit.map.PlacemarkMapObject;
 import com.yandex.mapkit.mapview.MapView;
+import com.yandex.mapkit.transport.TransportFactory;
+import com.yandex.runtime.image.ImageProvider;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
 public class TaskActivity extends AppCompatActivity {
     private static final int LOCATION_PERMISSION_REQUEST = 1001;
@@ -74,6 +107,8 @@ public class TaskActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MapKitFactory.setApiKey("30b5db23-7e43-469b-953d-937b344aa497");
+        MapKitFactory.initialize(this);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_task);
 
@@ -222,6 +257,7 @@ public class TaskActivity extends AppCompatActivity {
         originalImageView.setVisibility(View.GONE);
         videoView.setVisibility(View.GONE);
         textHintView.setVisibility(View.GONE);
+        mapView.setVisibility(View.GONE);
         //taskTextView.setVisibility(View.GONE);
 
         if (hintStep == 0)
@@ -260,12 +296,12 @@ public class TaskActivity extends AppCompatActivity {
         }
         else if (hintStep == 4)
         {
-          showMapHint();
+            showMapHint();
         }
         else
         {
-                hintStep = 0;
-                updateHint();
+            hintStep = 0;
+            updateHint();
         }
     }
 
@@ -288,45 +324,193 @@ public class TaskActivity extends AppCompatActivity {
 
     private void initializeMap() {
         try {
-            // Проверяем инициализацию MapKit
             if (mapView == null) {
-                Toast.makeText(this, "Ошибка: MapView не инициализирован", Toast.LENGTH_SHORT).show();
                 return;
             }
 
+            MapObjectCollection mapObjects = mapView.getMap().getMapObjects();
+            mapObjects.clear();
+
+            Point targetPoint = new Point(currentTest.getTargetLat(), currentTest.getTargetLng());
+
             // Целевая точка
-            Point targetPoint = new Point(57.769617, 40.929763);
+            PlacemarkMapObject targetPlacemark = mapObjects.addPlacemark(targetPoint);
+            targetPlacemark.setIcon(ImageProvider.fromResource(this, R.drawable.ic_target_marker));
+            targetPlacemark.setIconStyle(new IconStyle()
+                    .setAnchor(new PointF(0.5f, 1.0f))
+                    .setScale(0.1f)
+                    .setZIndex(10f));
+
+            // Анимация маркера цели
+            animateMarkerAppearance(targetPlacemark, 800);
+            startTargetPulsing(targetPlacemark);
+
+            // Круг зоны вокруг цели
+            CircleMapObject circle = mapObjects.addCircle(new Circle(targetPoint, currentTest.getRadiusMeters()));
+            circle.setFillColor(0x22FF0000);
+            circle.setStrokeColor(0x99FF0000);
+            circle.setStrokeWidth(3f);
+            circle.setZIndex(1f);
+
+            // Проверяем местоположение пользователя
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+                if (lastKnownLocation != null) {
+                    Point userPoint = new Point(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+
+                    // Используем метод addUserMarker для добавления маркера пользователя
+                    addUserMarker(userPoint);
+
+                    // Показываем расстояние до цели
+                    showDistance(userPoint, targetPoint);
+
+                    // Прокладываем маршрут
+                    if (isNetworkAvailable()) {
+                        requestRoute(userPoint, targetPoint);
+                    }
+                }
+            }
 
             // Настройка камеры
             mapView.getMap().move(
-                    new CameraPosition(targetPoint, 15f, 0f, 0f),
+                    new CameraPosition(targetPoint, 15f, 30f, 0f),
                     new Animation(Animation.Type.SMOOTH, 1f),
                     null
             );
 
-            // Добавляем объекты на карту
-            MapObjectCollection mapObjects = mapView.getMap().getMapObjects();
-            mapObjects.addPlacemark(targetPoint);
-
-            CircleMapObject circle = mapObjects.addCircle(
-                    new Circle(targetPoint, currentTest.getRadiusMeters())
-            );
-            circle.setFillColor(0x60FF0000);
-            circle.setStrokeColor(0xFF0000);
-            circle.setStrokeWidth(2f);
-
-            // Проверка интернет-соединения
-            if (!isNetworkAvailable()) {
-                Toast.makeText(this, "Нет интернет-соединения", Toast.LENGTH_LONG).show();
-                return;
-            }
-
-            checkAndShowUserLocation();
-
         } catch (Exception e) {
-            Log.e("MAP_ERROR", "Map initialization failed", e);
-            Toast.makeText(this, "Ошибка загрузки карты", Toast.LENGTH_SHORT).show();
+            Log.e("MAP_INIT", "Error: " + e.getMessage());
+            Toast.makeText(this, "Ошибка инициализации карты", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void requestRoute(Point from, Point to) {
+        try {
+            // 1. Инициализация маршрутизатора через DirectionsFactory
+            DirectionsFactory.initialize(this);
+            DrivingRouter drivingRouter = DirectionsFactory.getInstance().createDrivingRouter(DrivingRouterType.COMBINED);
+
+            // 2. Настройки маршрута
+            DrivingOptions drivingOptions = new DrivingOptions();
+            VehicleOptions vehicleOptions = new VehicleOptions();
+
+            // 3. Создание точек маршрута (исправленный конструктор RequestPoint)
+            List<RequestPoint> requestPoints = Arrays.asList(
+                    new RequestPoint(from, RequestPointType.WAYPOINT, null, null),
+                    new RequestPoint(to, RequestPointType.WAYPOINT, null, null)
+            );
+
+            // 4. Запрос маршрута
+            drivingRouter.requestRoutes(requestPoints, drivingOptions, vehicleOptions,
+                    new DrivingSession.DrivingRouteListener() {
+                        @Override
+                        public void onDrivingRoutes(@NonNull List<DrivingRoute> routes) {
+                            if (!routes.isEmpty()) {
+                                // Отрисовка маршрута
+                                Polyline geometry = routes.get(0).getGeometry();
+                                PolylineMapObject routePolyline = mapView.getMap()
+                                        .getMapObjects()
+                                        .addPolyline(geometry);
+
+                                routePolyline.setStrokeColor(Color.parseColor("#4285F4"));
+                                routePolyline.setStrokeWidth(5f);
+
+                                // Анимация камеры к маршруту (исправленная версия)
+                                animateCameraToRoute(geometry);
+                            }
+                        }
+
+                        @Override
+                        public void onDrivingRoutesError(@NonNull com.yandex.runtime.Error error) {
+                            Log.e("ROUTING_ERROR", "Ошибка маршрутизации: " + error.toString());
+                            runOnUiThread(() ->
+                                    Toast.makeText(TaskActivity.this,
+                                            "Не удалось построить маршрут",
+                                            Toast.LENGTH_LONG).show());
+                        }
+                    });
+        } catch (Exception e) {
+            Log.e("ROUTING_EXCEPTION", "Ошибка при построении маршрута", e);
+        }
+    }
+
+    private void animateCameraToRoute(Polyline route) {
+        if (route.getPoints().isEmpty()) return;
+
+        Point firstPoint = route.getPoints().get(0);
+        CameraPosition currentCameraPosition = mapView.getMap().getCameraPosition();
+
+        CameraPosition newCameraPosition = new CameraPosition(
+                firstPoint,
+                currentCameraPosition.getZoom(),
+                currentCameraPosition.getAzimuth(),
+                currentCameraPosition.getTilt()
+        );
+
+        mapView.getMap().move(
+                newCameraPosition,
+                new Animation(Animation.Type.SMOOTH, 1f),
+                null
+        );
+    }
+
+    private void addUserMarker(Point userPoint) {
+        MapObjectCollection mapObjects = mapView.getMap().getMapObjects();
+        PlacemarkMapObject userPlacemark = mapObjects.addPlacemark(userPoint);
+        userPlacemark.setIcon(ImageProvider.fromResource(this, R.drawable.ic_user_marker));
+        userPlacemark.setIconStyle(new IconStyle()
+                .setAnchor(new PointF(0.5f, 1.0f))
+                .setScale(0.1f)
+                .setZIndex(10f));
+
+        animateMarkerAppearance(userPlacemark, 800);
+    }
+
+    private void animateMarkerAppearance(PlacemarkMapObject marker, long duration) {
+        ValueAnimator scaleAnimator = ValueAnimator.ofFloat(0.1f, 1f);
+        scaleAnimator.setDuration(duration);
+        scaleAnimator.setInterpolator(new OvershootInterpolator(1.5f));
+        scaleAnimator.addUpdateListener(animation -> {
+            float scale = (float) animation.getAnimatedValue();
+            marker.setIconStyle(new IconStyle()
+                    .setAnchor(new PointF(0.5f, 1.0f))
+                    .setScale(scale)
+                    .setZIndex(10f));
+        });
+        scaleAnimator.start();
+    }
+
+    private void startTargetPulsing(PlacemarkMapObject marker) {
+        ValueAnimator animator = ValueAnimator.ofFloat(1f, 1.2f);
+        animator.setDuration(1000);
+        animator.setRepeatCount(ValueAnimator.INFINITE);
+        animator.setRepeatMode(ValueAnimator.REVERSE);
+        animator.addUpdateListener(animation -> {
+            float scale = (float) animation.getAnimatedValue();
+            marker.setIconStyle(new IconStyle()
+                    .setScale(scale)
+                    .setAnchor(new PointF(0.5f, 1.0f))
+            );
+        });
+        animator.start();
+    }
+
+    private void showDistance(Point from, Point to) {
+        float[] results = new float[1];
+        Location.distanceBetween(
+                from.getLatitude(), from.getLongitude(),
+                to.getLatitude(), to.getLongitude(),
+                results
+        );
+
+        String distanceText = String.format(Locale.getDefault(),
+                "До цели: %.1f км", results[0]/1000);
+
+        Snackbar.make(mapView, distanceText, Snackbar.LENGTH_LONG)
+                .setAction("Обновить", v -> initializeMap())
+                .show();
     }
 
     private boolean isNetworkAvailable() {

@@ -22,7 +22,7 @@
 
         <meta-data
             android:name="com.yandex.maps.api.v2.apikey"
-            android:value="${YANDEX_MAPS_API_KEY}"/>
+            android:value="30b5db23-7e43-469b-953d-937b344aa497"/>
 
         <activity
             android:name=".MainActivity"

@@ -17,11 +17,6 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        val yandexMapsApiKey = project.properties["YANDEX_MAPS_API_KEY"] as? String ?: ""
-
-        manifestPlaceholders["YANDEX_MAPS_API_KEY"] = yandexMapsApiKey
-        buildConfigField("String", "YANDEX_MAPS_API_KEY", "\"$yandexMapsApiKey\"")
     }
 
     buildTypes {
@@ -42,7 +37,7 @@ android {
 
 dependencies {
     implementation("com.yandex.android:maps.mobile:4.5.1-full")
-    implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation("com.google.android.gms:play-services-location:21.3.0")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -50,5 +45,5 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("androidx.appcompat:appcompat:1.7.1")
 }
