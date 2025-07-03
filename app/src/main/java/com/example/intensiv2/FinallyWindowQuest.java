@@ -43,12 +43,13 @@ public class FinallyWindowQuest extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        enableFullscreen();
         setContentView(R.layout.finally_quest_window);
-
+        enableFullscreen();
         sharedPrefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         checkStoragePermission();
     }
+
+
 
     private void checkStoragePermission()
     {
@@ -85,6 +86,7 @@ public class FinallyWindowQuest extends AppCompatActivity
         );
     }
 
+    /// если выйти из приложения, режим сохранится
     @Override
     public void onWindowFocusChanged(boolean hasFocus)
     {
