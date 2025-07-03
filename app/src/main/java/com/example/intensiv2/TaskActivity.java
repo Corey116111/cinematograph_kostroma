@@ -107,8 +107,6 @@ public class TaskActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MapKitFactory.setApiKey("30b5db23-7e43-469b-953d-937b344aa497");
-        MapKitFactory.initialize(this);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_task);
 

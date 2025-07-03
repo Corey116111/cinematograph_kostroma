@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -49,10 +51,13 @@ public class main_menu_activity extends AppCompatActivity {
             ViewGroup.LayoutParams params = finallyQuest.getLayoutParams();
 
             boolean finallyLocked = QuestStateManager.isFinallyLocked(this);
-            finallyQuest.setImageResource(finallyLocked
-                    ? R.drawable.finally_lock
-                    : R.drawable.finally_unlocked);
-            finallyQuest.setLayoutParams(params);
+
+            if (!finallyLocked)
+            {
+                finallyQuest.setImageResource(R.drawable.finally_unlocked);
+                Animation glowAnimation = AnimationUtils.loadAnimation(this, R.anim.glow_pulse);
+                finallyQuest.startAnimation(glowAnimation);
+            }
 
             params = gorkiy.getLayoutParams();
             boolean gorkiyPassed = QuestStateManager.isQuestPassed(this, TestConstants.TEST_GORKIY);
