@@ -165,7 +165,6 @@ public class TaskActivity extends AppCompatActivity {
         initializeViews();
         setupTestData();
         setupClickListeners();
-
         // Отложенный запрос разрешений
         new Handler().postDelayed(this::checkLocationPermissionAndStart, 300);
     }
@@ -383,7 +382,8 @@ public class TaskActivity extends AppCompatActivity {
     private void addTargetMarker(Point point) {
         Log.d("PLACEMARK", "NASHA CEL' coordinates: lat=" + point.getLatitude() + ", lon=" + point.getLongitude());
         MapObjectCollection mapObjects = mapView.getMap().getMapObjects();
-        PlacemarkMapObject targetPlacemark = mapObjects.addPlacemark(point, ImageProvider.fromResource(this, R.drawable.ic_target_marker));
+        PlacemarkMapObject targetPlacemark = mapObjects.addPlacemark(point);
+        targetPlacemark.setIcon(ImageProvider.fromResource(this, R.drawable.placemrkuser));
         targetPlacemark.setIconStyle(new IconStyle()
                 .setAnchor(new PointF(0.5f, 0.5f))
                 .setScale(1.0f)
@@ -468,7 +468,7 @@ public class TaskActivity extends AppCompatActivity {
         Log.d("PLACEMARK", "USER IKONKA coordinates: lat=" + point.getLatitude() + ", lon=" + point.getLongitude());
         MapObjectCollection mapObjects = mapView.getMap().getMapObjects();
         PlacemarkMapObject userPlacemark = mapObjects.addPlacemark(point);
-        userPlacemark.setIcon(ImageProvider.fromResource(this, R.drawable.ic_user_marker));
+        userPlacemark.setIcon(ImageProvider.fromResource(this, R.drawable.placemrkuser));
         userPlacemark.setIconStyle(new IconStyle()
                 .setAnchor(new PointF(0.5f, 0.5f))
                 .setScale(1.0f)
@@ -560,9 +560,10 @@ public class TaskActivity extends AppCompatActivity {
                         lastKnownLocation.getLongitude()
                 );
 
+                var marker = R.drawable.ic_user_marker;
                 // Добавляем маркер текущего местоположения
                 MapObjectCollection mapObjects = mapView.getMap().getMapObjects();
-                mapObjects.addPlacemark(userPoint);
+                mapObjects.addPlacemark(userPoint, ImageProvider.fromResource(this, marker));
 
             } else {
                 // Если местоположение не получено, пробуем еще раз через 1 секунду
