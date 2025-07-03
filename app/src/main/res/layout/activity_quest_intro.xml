@@ -19,7 +19,6 @@
     android:layout_width="48dp"
     android:layout_height="48dp"
     android:background="@drawable/voice_on"
-    android:src="@android:drawable/ic_lock_silent_mode_off"
     android:contentDescription="Озвучить"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintStart_toStartOf="parent"

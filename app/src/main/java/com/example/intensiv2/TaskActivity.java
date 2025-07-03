@@ -340,7 +340,8 @@ public class TaskActivity extends AppCompatActivity {
     }
 
     private void initializeMap() {
-        try {
+        try
+        {
             if (mapView == null) {
                 return;
             }
@@ -351,7 +352,6 @@ public class TaskActivity extends AppCompatActivity {
             Point targetPoint = new Point(currentTest.getTargetLat(), currentTest.getTargetLng());
             CameraPosition cameraPosition = new CameraPosition(targetPoint, 145.0f, 0.0f, 45.0f);
             mapView.getMap().move(cameraPosition, new Animation(Animation.Type.SMOOTH, 1), null);
-            addTargetMarker(targetPoint);
 
             // 2. Точка пользователя (текущее местоположение)
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -360,12 +360,14 @@ public class TaskActivity extends AppCompatActivity {
 
                 if (lastKnownLocation != null) {
                     Point userPoint = new Point(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
-                    addUserMarker(userPoint);
 
                     // 4. Строим маршрут (если есть интернет)
                     if (isNetworkAvailable()) {
                         requestRoute(userPoint, targetPoint);
+
                     }
+                    addTargetMarker(targetPoint);
+                    addUserMarker(userPoint);
                 } else {
                     Toast.makeText(this, "Не удалось определить ваше местоположение", Toast.LENGTH_SHORT).show();
                 }
@@ -375,12 +377,13 @@ public class TaskActivity extends AppCompatActivity {
             Log.e("MAP_INIT", "Error: " + e.getMessage());
             Toast.makeText(this, "Ошибка инициализации карты", Toast.LENGTH_LONG).show();
         }
+
     }
 
     private void addTargetMarker(Point point) {
+        Log.d("PLACEMARK", "NASHA CEL' coordinates: lat=" + point.getLatitude() + ", lon=" + point.getLongitude());
         MapObjectCollection mapObjects = mapView.getMap().getMapObjects();
-        PlacemarkMapObject targetPlacemark = mapObjects.addPlacemark(point);
-        targetPlacemark.setIcon(ImageProvider.fromResource(this, R.drawable.ic_target_marker));
+        PlacemarkMapObject targetPlacemark = mapObjects.addPlacemark(point, ImageProvider.fromResource(this, R.drawable.ic_target_marker));
         targetPlacemark.setIconStyle(new IconStyle()
                 .setAnchor(new PointF(0.5f, 0.5f))
                 .setScale(1.0f)
@@ -462,6 +465,7 @@ public class TaskActivity extends AppCompatActivity {
     }
 
     private void addUserMarker(Point point) {
+        Log.d("PLACEMARK", "USER IKONKA coordinates: lat=" + point.getLatitude() + ", lon=" + point.getLongitude());
         MapObjectCollection mapObjects = mapView.getMap().getMapObjects();
         PlacemarkMapObject userPlacemark = mapObjects.addPlacemark(point);
         userPlacemark.setIcon(ImageProvider.fromResource(this, R.drawable.ic_user_marker));

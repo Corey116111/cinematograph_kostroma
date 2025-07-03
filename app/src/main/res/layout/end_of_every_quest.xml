@@ -10,11 +10,14 @@
 
     <FrameLayout
         android:id="@+id/text_overlay"
+        style="@style/TransparentBackgroundStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:backgroundTint="@null"
+        android:background="@null"
         tools:ignore="MissingConstraints">
 
         <ImageView
@@ -22,6 +25,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/finalimagegorkiy"
+            android:backgroundTint="@android:color/transparent"
+            android:background="@android:color/transparent"
             android:scaleType="centerInside" />
 
     </FrameLayout>
@@ -36,8 +41,7 @@
         android:layout_marginStart="150dp"
         android:layout_marginTop="250dp"
         android:padding="8dp"
-        android:background="@drawable/helper"
-        android:src="@android:drawable/ic_lock_silent_mode_off"
+        android:src="@drawable/voice_on"
         android:contentDescription="Озвучить"
         android:clickable="true"
         android:focusable="true"/>
