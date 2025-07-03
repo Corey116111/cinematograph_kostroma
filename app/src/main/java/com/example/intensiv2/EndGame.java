@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
+import android.media.MediaPlayer;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +15,7 @@ public class EndGame extends AppCompatActivity {
     private ImageView endGameView;
     private int questId;
     private TestManager.QuestData questData;
+    private MediaPlayer audioPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,16 +26,49 @@ public class EndGame extends AppCompatActivity {
         endGameView = findViewById(R.id.endGame);
         questData = TestManager.getQuest(questId);
 
-        // Устанавливаем флаг "квест пройден"
+        //устанавливаем флаг "квест пройден"
         QuestStateManager.setQuestPassed(this, questId, true);
         
-        // Проверяем, нужно ли разблокировать финальный квест
+        //проверяем, нужно ли разблокировать финальный квест
         if (QuestStateManager.areAllQuestsPassed(this)) {
             QuestStateManager.setFinallyLocked(this, false);
         }
 
-        // Устанавливаем фон из TestManager
+        //устанавливаем фон из TestManager
         setBackgroundFromTestManager();
+
+        // --- ДОБАВЛЯЕМ ОБРАБОТЧИК КНОПКИ ЗВУКА ---
+        ImageView soundButton = findViewById(R.id.soundButton);
+        soundButton.setOnClickListener(v -> {
+            if (audioPlayer != null && audioPlayer.isPlaying()) {
+                audioPlayer.stop();
+                audioPlayer.release();
+                audioPlayer = null;
+                return;
+            }
+            String audioName = questData != null ? questData.getEndAudio() : null;
+            if (audioName != null && !audioName.isEmpty()) {
+                int resId = getResources().getIdentifier(audioName, "raw", getPackageName());
+                if (resId != 0) {
+                    if (audioPlayer != null) {
+                        audioPlayer.stop();
+                        audioPlayer.release();
+                    }
+                    audioPlayer = MediaPlayer.create(this, resId);
+                    float volume = 0.7f;
+                    audioPlayer.setVolume(volume, volume);
+                    audioPlayer.setOnCompletionListener(mp -> {
+                        mp.release();
+                        audioPlayer = null;
+                    });
+                    audioPlayer.start();
+                } else {
+                    Toast.makeText(this, "Аудио не найдено", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(this, "Нет аудио для этого экрана", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void setBackgroundFromTestManager() {
@@ -55,7 +91,22 @@ public class EndGame extends AppCompatActivity {
     }
 
     public void goToMenuFromFinally(View view) {
+        if (audioPlayer != null) {
+            audioPlayer.stop();
+            audioPlayer.release();
+            audioPlayer = null;
+        }
         Intent intent = new Intent (this, main_menu_activity.class);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (audioPlayer != null) {
+            audioPlayer.stop();
+            audioPlayer.release();
+            audioPlayer = null;
+        }
+        super.onDestroy();
     }
 }
