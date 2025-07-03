@@ -26,6 +26,8 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.widget.ImageButton;
+import android.media.MediaPlayer;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -39,6 +41,9 @@ public class FinallyWindowQuest extends AppCompatActivity
     private static final String KEY_CERTIFICATE_RECEIVED = "is_certificate_received";
     private SharedPreferences sharedPrefs;
 
+    private ImageButton soundButton;
+    private MediaPlayer audioPlayer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -47,9 +52,41 @@ public class FinallyWindowQuest extends AppCompatActivity
         enableFullscreen();
         sharedPrefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         checkStoragePermission();
+
+        soundButton = findViewById(R.id.soundButton);
+        if (soundButton != null) {
+            soundButton.setOnClickListener(v -> {
+                if (audioPlayer != null && audioPlayer.isPlaying()) {
+                    audioPlayer.stop();
+                    audioPlayer.release();
+                    audioPlayer = null;
+                    return;
+                }
+                String audioName = TestManager.getFinalQuestAudioName();
+                if (audioName != null && !audioName.isEmpty()) {
+                    int resId = getResources().getIdentifier(audioName, "raw", getPackageName());
+                    if (resId != 0) {
+                        if (audioPlayer != null) {
+                            audioPlayer.stop();
+                            audioPlayer.release();
+                        }
+                        audioPlayer = MediaPlayer.create(this, resId);
+                        float volume = 0.7f;
+                        audioPlayer.setVolume(volume, volume);
+                        audioPlayer.setOnCompletionListener(mp -> {
+                            mp.release();
+                            audioPlayer = null;
+                        });
+                        audioPlayer.start();
+                    } else {
+                        Toast.makeText(this, "Аудио не найдено", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(this, "Нет аудио для этого экрана", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
-
-
 
     private void checkStoragePermission()
     {
@@ -99,12 +136,22 @@ public class FinallyWindowQuest extends AppCompatActivity
 
     public void goToMenuFromFinally (View v)
     {
+        if (audioPlayer != null) {
+            audioPlayer.stop();
+            audioPlayer.release();
+            audioPlayer = null;
+        }
         Intent intent = new Intent (this, main_menu_activity.class);
         startActivity(intent);
     }
 
     public void get_sertificate(View v)
     {
+        if (audioPlayer != null) {
+            audioPlayer.stop();
+            audioPlayer.release();
+            audioPlayer = null;
+        }
         if (sharedPrefs.getBoolean(KEY_CERTIFICATE_RECEIVED, false))
         {
             Toast.makeText(this, "Вы уже получили сертификат!", Toast.LENGTH_LONG).show();
@@ -220,5 +267,14 @@ public class FinallyWindowQuest extends AppCompatActivity
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (audioPlayer != null) {
+            audioPlayer.release();
+            audioPlayer = null;
+        }
     }
 }

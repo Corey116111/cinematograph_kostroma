@@ -37,6 +37,18 @@
             android:src="@drawable/finally_window"
             android:scaleType="fitStart" />
 
+        <ImageButton
+            android:id="@+id/soundButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="170dp"
+            android:background="@drawable/voice_on"
+            android:contentDescription="Озвучить"
+            android:elevation="4dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
         <EditText
             android:id="@+id/text_input"
             android:layout_width="160dp"
@@ -110,5 +122,6 @@
             android:src="@drawable/finally_window_send"
             tools:ignore="SpeakableTextPresentCheck" />
     </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
