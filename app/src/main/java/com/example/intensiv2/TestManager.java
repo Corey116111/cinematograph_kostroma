@@ -33,6 +33,18 @@ public class TestManager {
 
     private static final Map<Integer, QuestData> quests = new HashMap<>();
     
+    private static final String[] HISTORY_AUDIO_NAMES = {
+        "novella1",
+        "novella2",
+        "novella3",
+        "novella4"
+    };
+
+    private static final String FINAL_QUEST_AUDIO_NAME = "finalfinalov";
+    public static String getFinalQuestAudioName() {
+        return FINAL_QUEST_AUDIO_NAME;
+    }
+
     static {
         // Пример для "Жестокий романс"
         TestData romansQuestion = new TestData(
@@ -208,5 +220,15 @@ public class TestManager {
 
     public static boolean hasQuest(int questId) {
         return quests.containsKey(questId);
+    }
+
+    public static String getHistoryAudioName(int index) {
+        if (index >= 0 && index < HISTORY_AUDIO_NAMES.length) {
+            return HISTORY_AUDIO_NAMES[index];
+        }
+        return null;
+    }
+    public static int getHistoryAudioCount() {
+        return HISTORY_AUDIO_NAMES.length;
     }
 }

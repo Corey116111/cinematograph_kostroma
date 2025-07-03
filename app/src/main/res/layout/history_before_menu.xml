@@ -39,4 +39,16 @@
         tools:ignore="SpeakableTextPresentCheck" />
     </LinearLayout>
 
+    <ImageButton
+        android:id="@+id/soundButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/voice_on"
+        android:contentDescription="Озвучить"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="32dp"
+        android:elevation="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
