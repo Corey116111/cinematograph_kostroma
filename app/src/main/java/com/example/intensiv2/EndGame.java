@@ -1,8 +1,10 @@
 package com.example.intensiv2;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 import android.media.MediaPlayer;
@@ -25,7 +27,7 @@ public class EndGame extends AppCompatActivity {
         questId = getIntent().getIntExtra(TestConstants.EXTRA_TEST_ID, TestConstants.TEST_GORKIY);
         endGameView = findViewById(R.id.endGame);
         questData = TestManager.getQuest(questId);
-
+        findViewById(R.id.endGame).setBackgroundColor(Color.TRANSPARENT);
         //устанавливаем флаг "квест пройден"
         QuestStateManager.setQuestPassed(this, questId, true);
         
@@ -39,11 +41,14 @@ public class EndGame extends AppCompatActivity {
 
         // --- ДОБАВЛЯЕМ ОБРАБОТЧИК КНОПКИ ЗВУКА ---
         ImageView soundButton = findViewById(R.id.soundButton);
+        ViewGroup.LayoutParams params = soundButton.getLayoutParams();
         soundButton.setOnClickListener(v -> {
             if (audioPlayer != null && audioPlayer.isPlaying()) {
                 audioPlayer.stop();
                 audioPlayer.release();
                 audioPlayer = null;
+                soundButton.setImageResource(R.drawable.voice_off);
+                soundButton.setLayoutParams(params);
                 return;
             }
             String audioName = questData != null ? questData.getEndAudio() : null;
@@ -53,8 +58,11 @@ public class EndGame extends AppCompatActivity {
                     if (audioPlayer != null) {
                         audioPlayer.stop();
                         audioPlayer.release();
+                        soundButton.setImageResource(R.drawable.voice_off);
+                        soundButton.setLayoutParams(params);
                     }
                     audioPlayer = MediaPlayer.create(this, resId);
+                    soundButton.setImageResource(R.drawable.voice_on);
                     float volume = 0.7f;
                     audioPlayer.setVolume(volume, volume);
                     audioPlayer.setOnCompletionListener(mp -> {

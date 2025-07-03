@@ -4,4 +4,7 @@
         <item name="android:windowEnterAnimation">@anim/glow_pulse</item>
         <item name="android:windowExitAnimation">@anim/glow_pulse</item>
     </style>
+    <style name="TransparentBackgroundStyle">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
 </resources>
