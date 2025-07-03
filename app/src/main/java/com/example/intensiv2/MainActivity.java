@@ -22,11 +22,9 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        MapKitFactory.setApiKey("${YANDEX_MAPS_API_KEY}");
-        MapKitFactory.initialize(this);
         EdgeToEdge.enable(this);
-        enableFullscreen();
         setContentView(R.layout.activity_main);
+        enableFullscreen();
     }
 
     /// убираем шторку и кнопки телефона, полноэкранный режим

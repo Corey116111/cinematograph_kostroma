@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="#40000000"/>
+            <size android:width="60dp" android:height="20dp"/>
+        </shape>
+    </item>
+    <item android:top="10dp">
+        <bitmap
+            android:src="@drawable/ic_user_marker"
+            android:gravity="center"/>
+    </item>
+</layer-list>
