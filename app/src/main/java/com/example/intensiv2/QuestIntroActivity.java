@@ -25,6 +25,7 @@ public class QuestIntroActivity extends AppCompatActivity {
     private String screenType;
     private int questionIndex;
     private String bgResName;
+    private android.media.MediaPlayer audioPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +102,11 @@ public class QuestIntroActivity extends AppCompatActivity {
         } else {
             //обычный intro (новелла)
             nextButton.setOnClickListener(v -> {
+                if (audioPlayer != null) {
+                    audioPlayer.stop();
+                    audioPlayer.release();
+                    audioPlayer = null;
+                }
                 Intent intent = new Intent(this, TaskActivity.class);
                 intent.putExtra(TestConstants.EXTRA_TEST_ID, questId);
                 intent.putExtra(EXTRA_QUESTION_INDEX, 0); // начинаем с первого вопроса
@@ -112,6 +118,45 @@ public class QuestIntroActivity extends AppCompatActivity {
             nextButton.setVisibility(View.VISIBLE);
         }
         // soundButton хз зачем кнопка на макете но можно будет добавить че там хотели
+        soundButton.setOnClickListener(v -> {
+            if (audioPlayer != null && audioPlayer.isPlaying()) {
+                audioPlayer.stop();
+                audioPlayer.release();
+                audioPlayer = null;
+                return;
+            }
+            String audioName = null;
+            if ("intro".equals(screenType)) {
+                if (questData.getIntroAudio() != null && !questData.getIntroAudio().isEmpty()) {
+                    audioName = questData.getIntroAudio();
+                }
+            } else if ("placeinfo".equals(screenType)) {
+                if (questData.getQuestions() != null && questionIndex < questData.getQuestions().size()) {
+                    audioName = questData.getQuestions().get(questionIndex).getAudioUrl();
+                }
+            }
+            if (audioName != null && !audioName.isEmpty()) {
+                int resId = getResources().getIdentifier(audioName, "raw", getPackageName());
+                if (resId != 0) {
+                    if (audioPlayer != null) {
+                        audioPlayer.stop();
+                        audioPlayer.release();
+                    }
+                    audioPlayer = android.media.MediaPlayer.create(this, resId);
+                    float volume = 0.7f;
+                    audioPlayer.setVolume(volume, volume);
+                    audioPlayer.setOnCompletionListener(mp -> {
+                        mp.release();
+                        audioPlayer = null;
+                    });
+                    audioPlayer.start();
+                } else {
+                    android.widget.Toast.makeText(this, "Аудио не найдено", android.widget.Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                android.widget.Toast.makeText(this, "Нет аудио для этого экрана", android.widget.Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void enableFullscreen()
@@ -168,5 +213,15 @@ public class QuestIntroActivity extends AppCompatActivity {
             // В случае ошибки оставляем дефолтный фон
             e.printStackTrace();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (audioPlayer != null) {
+            audioPlayer.stop();
+            audioPlayer.release();
+            audioPlayer = null;
+        }
+        super.onDestroy();
     }
 }
