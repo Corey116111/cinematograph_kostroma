@@ -37,7 +37,8 @@ public class TestManager {
                 "originalromans1",
                 "disortedromans1",
                 "gerb",
-                "Как драгоценная реликвия в ладонях, главный символ Костромы покоится на ее гербе"
+                "Как драгоценная реликвия в ладонях, главный символ Костромы покоится на ее гербе",
+                ""
         );
         TestData romansQuestion2 = new TestData(
                 "ЖЕСТОКИЙ РОМАНС",
@@ -48,7 +49,8 @@ public class TestManager {
                 "originalromans2",
                 "distortedromans2",
                 "besedka",
-                "Очаровательный уголок Костромы, место, где некогда замирал в восхищении перед волжскими просторами сам Александр Островский..."
+                "Очаровательный уголок Костромы, место, где некогда замирал в восхищении перед волжскими просторами сам Александр Островский...",
+                ""
         );
         TestData romansQuestion3 = new TestData(
                 "ЖЕСТОКИЙ РОМАНС",
@@ -59,7 +61,8 @@ public class TestManager {
                 "originalromans3",
                 "distortedromans3",
                 "pristan",
-                "Как страж веков, это здание гордо высится над седыми водами Волги-матушки, овеянное дыханием истории"
+                "Как страж веков, это здание гордо высится над седыми водами Волги-матушки, овеянное дыханием истории",
+                ""
         );
         String finalImageRomans = "finalimageromans";
         String ticketInfoImageRomans = "ticketromans";
@@ -82,7 +85,8 @@ public class TestManager {
                 "distortedgorkiy1",
                 "muzey",
                 "Эхо из 1953: Это самая длинная пешеходная улица Костромы. Для съемок перекрыли 500 метров и пустили ретро-трамвай, которого никогда не было!",
-                new String[]{"Художественный музей", "Театр Островского", "Дворянское собрание"}
+                new String[]{"Художественный музей", "Театр Островского", "Дворянское собрание"},
+                ""
         );
         TestData gorkiyQuestion2 = new TestData(
                 "ГОРЬКИЙ 53",
@@ -93,7 +97,8 @@ public class TestManager {
                 "originalgorkiy2",
                 "distortedgorkiy2",
                 "simon",
-                "Улица, где в 1985-м висела растяжка «Миру — мир!». Сейчас её нет, но остались старинные фонари и дома с лепниной"
+                "Улица, где в 1985-м висела растяжка «Миру — мир!». Сейчас её нет, но остались старинные фонари и дома с лепниной",
+                ""
         );
         TestData gorkiyQuestion3 = new TestData(
                 "ГОРЬКИЙ 53",
@@ -105,7 +110,8 @@ public class TestManager {
                 "distortedgorkiy3",
                 "gaup",
                 "Высоченная башня с часами, где в 1953-м встречали поезда. В реальности она тушила огонь, а не встречала гостей",
-                new String[]{"Филармония", "Каланча", "Гауптвахта"}
+                new String[]{"Филармония", "Каланча", "Гауптвахта"},
+                ""
         );
         String finalImageGorkiy = "finalimagegorkiy";
         String ticketInfoImageGorkiy = "ticketgorkiy";
@@ -128,7 +134,8 @@ public class TestManager {
                 "evildistorted3",
                 "handshake",
                 "Врата открываются там, где возвышается башня Молочных рядов, взирая на тебя с величественным спокойствием.",
-                new String[] {"Часовня","Крыша с флюгером", "Колокольня", "Шпиль с острым навершием"}
+                new String[] {"Часовня","Крыша с флюгером", "Колокольня", "Шпиль с острым навершием"},
+                ""
         );
         TestData evilQuestion2 = new TestData(
                 "ЗЛЫЕ ЛЮДИ",
@@ -140,7 +147,8 @@ public class TestManager {
                 "evildistorted1",
                 "womens",
                 "Место, где переплелись древняя культура Костромы, сочная гастрономия чебуреков и стихия моды в мелочных рядов",
-                new String[]{"Да", "Нет"}
+                new String[]{"Да", "Нет"},
+                ""
         );
         TestData evilQuestion3 = new TestData(
                 "ЗЛЫЕ ЛЮДИ",
@@ -152,7 +160,8 @@ public class TestManager {
                 "evildistorted2",
                 "peopleonstage",
                 "Места суть там, где возвышается храм Спаса в Рядах",
-                new String[]{"1", "5", "6", "7"}
+                new String[]{"1", "5", "6", "7"},
+                ""
         );
         String finalImageEvil = "finalimageevil";
         String ticketInfoImageEvil = "ticketevil";
