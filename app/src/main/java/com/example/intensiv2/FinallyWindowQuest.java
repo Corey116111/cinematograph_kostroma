@@ -52,7 +52,7 @@ public class FinallyWindowQuest extends AppCompatActivity
         enableFullscreen();
         sharedPrefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         checkStoragePermission();
-
+        
         soundButton = findViewById(R.id.soundButton);
         if (soundButton != null) {
             soundButton.setOnClickListener(v -> {
@@ -88,6 +88,7 @@ public class FinallyWindowQuest extends AppCompatActivity
         }
     }
 
+    ///  проверяем разрешение на сохранение в галерею
     private void checkStoragePermission()
     {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -123,7 +124,7 @@ public class FinallyWindowQuest extends AppCompatActivity
         );
     }
 
-    /// если выйти из приложения, режим сохранится
+
     @Override
     public void onWindowFocusChanged(boolean hasFocus)
     {
@@ -133,7 +134,7 @@ public class FinallyWindowQuest extends AppCompatActivity
             enableFullscreen();
         }
     }
-
+    ///  выход в меню
     public void goToMenuFromFinally (View v)
     {
         if (audioPlayer != null) {
@@ -144,21 +145,23 @@ public class FinallyWindowQuest extends AppCompatActivity
         Intent intent = new Intent (this, main_menu_activity.class);
         startActivity(intent);
     }
-
+    ///  получаем сертификат
     public void get_sertificate(View v)
     {
+
         if (audioPlayer != null) {
             audioPlayer.stop();
             audioPlayer.release();
             audioPlayer = null;
         }
+      
         if (sharedPrefs.getBoolean(KEY_CERTIFICATE_RECEIVED, false))
         {
             Toast.makeText(this, "Вы уже получили сертификат!", Toast.LENGTH_LONG).show();
             return;
         }
 
-        EditText nameInput = findViewById(R.id.text_input);
+        EditText nameInput = findViewById(R.id.text_input); // ввод имени
         String name = nameInput.getText().toString().trim();
 
         if (name.isEmpty())
@@ -192,7 +195,7 @@ public class FinallyWindowQuest extends AppCompatActivity
                     Toast.LENGTH_LONG).show();
         }
     }
-
+    /// создаем сертификат, переносим на него записанное имя
     private Bitmap createCertificateBitmap(String name)
     {
         try
@@ -223,7 +226,7 @@ public class FinallyWindowQuest extends AppCompatActivity
             return null;
         }
     }
-
+    ///  сохраняем сертификат с именем в галерею пользователя
     private boolean saveImageToGallery(Bitmap bitmap, String name)
     {
         try

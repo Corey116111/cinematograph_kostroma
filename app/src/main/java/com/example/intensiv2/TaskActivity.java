@@ -383,10 +383,10 @@ public class TaskActivity extends AppCompatActivity {
         Log.d("PLACEMARK", "NASHA CEL' coordinates: lat=" + point.getLatitude() + ", lon=" + point.getLongitude());
         MapObjectCollection mapObjects = mapView.getMap().getMapObjects();
         PlacemarkMapObject targetPlacemark = mapObjects.addPlacemark(point);
-        targetPlacemark.setIcon(ImageProvider.fromResource(this, R.drawable.placemrkuser));
+        targetPlacemark.setIcon(ImageProvider.fromResource(this, R.drawable.target_marker));
         targetPlacemark.setIconStyle(new IconStyle()
                 .setAnchor(new PointF(0.5f, 0.5f))
-                .setScale(1.0f)
+                .setScale(0.6f)
                 .setZIndex(10f));
 
         // Анимация маркера
@@ -422,11 +422,10 @@ public class TaskActivity extends AppCompatActivity {
                                         .getMapObjects()
                                         .addPolyline(geometry);
 
-                                routePolyline.setStrokeColor(Color.parseColor("#4285F4"));
+                                routePolyline.setStrokeColor(Color.DKGRAY); // устанавливаем цвет маршрута на зеленый
                                 routePolyline.setStrokeWidth(5f);
 
-                                // Анимация камеры к маршруту (исправленная версия)
-                                animateCameraToRoute(geometry);
+                                animateCameraToRoute(geometry); // анимация камеры к маршруту
                             }
                         }
 
@@ -468,10 +467,10 @@ public class TaskActivity extends AppCompatActivity {
         Log.d("PLACEMARK", "USER IKONKA coordinates: lat=" + point.getLatitude() + ", lon=" + point.getLongitude());
         MapObjectCollection mapObjects = mapView.getMap().getMapObjects();
         PlacemarkMapObject userPlacemark = mapObjects.addPlacemark(point);
-        userPlacemark.setIcon(ImageProvider.fromResource(this, R.drawable.placemrkuser));
+        userPlacemark.setIcon(ImageProvider.fromResource(this, R.drawable.user_marker));
         userPlacemark.setIconStyle(new IconStyle()
                 .setAnchor(new PointF(0.5f, 0.5f))
-                .setScale(1.0f)
+                .setScale(0.6f)
                 .setZIndex(10f));
 
         // Анимация появления
