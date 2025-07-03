@@ -28,19 +28,17 @@ public class EndGame extends AppCompatActivity {
         endGameView = findViewById(R.id.endGame);
         questData = TestManager.getQuest(questId);
         findViewById(R.id.endGame).setBackgroundColor(Color.TRANSPARENT);
-        //устанавливаем флаг "квест пройден"
-        QuestStateManager.setQuestPassed(this, questId, true);
+
+        QuestStateManager.setQuestPassed(this, questId, true); // устанавливаем флаг "квест пройден"
         
-        //проверяем, нужно ли разблокировать финальный квест
-        if (QuestStateManager.areAllQuestsPassed(this)) {
+
+        if (QuestStateManager.areAllQuestsPassed(this)) { // проверяем, нужно ли разблокировать финальный квест
             QuestStateManager.setFinallyLocked(this, false);
         }
 
-        //устанавливаем фон из TestManager
-        setBackgroundFromTestManager();
+        setBackgroundFromTestManager(); /// устанавливаем фон из сборника квестов
 
-        // --- ДОБАВЛЯЕМ ОБРАБОТЧИК КНОПКИ ЗВУКА ---
-        ImageView soundButton = findViewById(R.id.soundButton);
+        ImageView soundButton = findViewById(R.id.soundButton); /// обработчик кнопки звука
         ViewGroup.LayoutParams params = soundButton.getLayoutParams();
         soundButton.setOnClickListener(v -> {
             if (audioPlayer != null && audioPlayer.isPlaying()) {
@@ -101,7 +99,7 @@ public class EndGame extends AppCompatActivity {
             enableFullscreen();
         }
     }
-
+    ///  устанавливаем картинку завершения игры по айдишнику квеста
     private void setBackgroundFromTestManager() {
         try {
             if (questData != null && questData.getPlaceInfoBgNames() != null && !questData.getPlaceInfoBgNames().isEmpty()) {
@@ -111,17 +109,15 @@ public class EndGame extends AppCompatActivity {
                     int bgResId = TestManager.getDrawableResourceId(bgFinalImange);
                     if (bgResId != 0) {
                         endGameView.setImageResource(bgResId);
-                        //endGameView.setBackgroundResource(bgResId);
                     }
                 }
             }
         } catch (Exception e) {
-            // В случае ошибки оставляем дефолтный фон
-            e.printStackTrace();
+            e.printStackTrace(); // В случае ошибки оставляем дефолтный фон
         }
     }
 
-    public void goToMenuFromFinally(View view) {
+    public void goToMenuFromFinally(View view) { ///  при выходе в меню, отключаем озвучку
         if (audioPlayer != null) {
             audioPlayer.stop();
             audioPlayer.release();
@@ -130,7 +126,7 @@ public class EndGame extends AppCompatActivity {
         Intent intent = new Intent (this, main_menu_activity.class);
         startActivity(intent);
     }
-
+    ///  при конце тоже отключаем все настройки озвучки
     @Override
     protected void onDestroy() {
         if (audioPlayer != null) {

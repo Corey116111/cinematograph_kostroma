@@ -48,9 +48,7 @@ public class FinallyWindowQuest extends AppCompatActivity
         sharedPrefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         checkStoragePermission();
     }
-
-
-
+    ///  проверяем разрешение на сохранение в галерею
     private void checkStoragePermission()
     {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -86,7 +84,7 @@ public class FinallyWindowQuest extends AppCompatActivity
         );
     }
 
-    /// если выйти из приложения, режим сохранится
+
     @Override
     public void onWindowFocusChanged(boolean hasFocus)
     {
@@ -96,22 +94,22 @@ public class FinallyWindowQuest extends AppCompatActivity
             enableFullscreen();
         }
     }
-
+    ///  выход в меню
     public void goToMenuFromFinally (View v)
     {
         Intent intent = new Intent (this, main_menu_activity.class);
         startActivity(intent);
     }
-
+    ///  получаем сертификат
     public void get_sertificate(View v)
     {
-        if (sharedPrefs.getBoolean(KEY_CERTIFICATE_RECEIVED, false))
+        if (sharedPrefs.getBoolean(KEY_CERTIFICATE_RECEIVED, false)) // если уже получал
         {
             Toast.makeText(this, "Вы уже получили сертификат!", Toast.LENGTH_LONG).show();
             return;
         }
 
-        EditText nameInput = findViewById(R.id.text_input);
+        EditText nameInput = findViewById(R.id.text_input); // ввод имени
         String name = nameInput.getText().toString().trim();
 
         if (name.isEmpty())
@@ -145,7 +143,7 @@ public class FinallyWindowQuest extends AppCompatActivity
                     Toast.LENGTH_LONG).show();
         }
     }
-
+    /// создаем сертификат, переносим на него записанное имя
     private Bitmap createCertificateBitmap(String name)
     {
         try
@@ -176,7 +174,7 @@ public class FinallyWindowQuest extends AppCompatActivity
             return null;
         }
     }
-
+    ///  сохраняем сертификат с именем в галерею пользователя
     private boolean saveImageToGallery(Bitmap bitmap, String name)
     {
         try

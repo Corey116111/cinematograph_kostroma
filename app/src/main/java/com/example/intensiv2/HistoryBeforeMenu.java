@@ -25,7 +25,7 @@ public class HistoryBeforeMenu extends AppCompatActivity {
         history_before_menu_id_glav = findViewById(R.id.history_before_menu_id_glav);
 
     }
-    /// убираю шторы и кнопки телефона
+    /// убираем шторки и кнопки телефона
     private void enableFullscreen() {
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY |
@@ -45,7 +45,7 @@ public class HistoryBeforeMenu extends AppCompatActivity {
         }
     }
 
-    // следующая реплика
+    // следующая реплика в новелле
     public void next(View view) {
         clickCount++;
 

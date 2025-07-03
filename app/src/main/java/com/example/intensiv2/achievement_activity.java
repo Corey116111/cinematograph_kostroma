@@ -23,7 +23,7 @@ public class achievement_activity extends AppCompatActivity {
 
         updateAchievements();
     }
-
+    /// обновляем достижения. Смотрим, изменились ли флаги и сразу же обновляем информацию о достижении
     private void updateAchievements() {
         boolean gorkiyPassed = QuestStateManager.isQuestPassed(this, TestConstants.TEST_GORKIY);
         boolean romansPassed = QuestStateManager.isQuestPassed(this, TestConstants.TEST_ROMANS);
@@ -47,7 +47,7 @@ public class achievement_activity extends AppCompatActivity {
         super.onResume();
         updateAchievements();
     }
-
+    /// убираем интерфейс телефона
     private void enableFullscreen() {
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY |
@@ -58,12 +58,12 @@ public class achievement_activity extends AppCompatActivity {
                         View.SYSTEM_UI_FLAG_FULLSCREEN
         );
     }
-
+    /// кнопка перехода в меню
     public void goToMenuFromAchievement(View v) {
         Intent intent = new Intent(this, main_menu_activity.class);
         startActivity(intent);
     }
-
+    /// при выходе из приложения, настройки с отсутствием интерфейса сохранятся.
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
