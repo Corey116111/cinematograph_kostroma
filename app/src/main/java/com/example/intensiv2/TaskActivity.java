@@ -6,6 +6,7 @@ import com.yandex.mapkit.directions.DirectionsFactory;
 import com.yandex.mapkit.directions.driving.DrivingRoute;
 import com.yandex.mapkit.directions.driving.DrivingRouterType;
 import com.yandex.mapkit.directions.driving.DrivingSession;
+import com.yandex.mapkit.geometry.Geometry;
 import com.yandex.mapkit.map.MapObject;
 import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.RequestPoint;
@@ -107,6 +108,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class TaskActivity extends AppCompatActivity {
+    private ValueAnimator targetPulsingAnimator;
     private static final int LOCATION_PERMISSION_REQUEST = 1001;
     private LocationNotifier locationNotifier;
     private int hintStep = 0;
@@ -179,11 +181,6 @@ public class TaskActivity extends AppCompatActivity {
         atPlaceButton = findViewById(R.id.atPlaceButton);
         menuButton = findViewById(R.id.menuButton);
         mapView = findViewById(R.id.mapView);
-        mapView.getMap().move(
-                new CameraPosition(new Point(0, 0), 1, 0, 0),
-                new Animation(Animation.Type.SMOOTH, 0),
-                null
-        );
     }
 
     private void setupTestData() {
@@ -351,8 +348,9 @@ public class TaskActivity extends AppCompatActivity {
             MapObjectCollection mapObjects = mapView.getMap().getMapObjects();
             mapObjects.clear();
 
-            // 1. Целевая точка (фиксированные координаты)
-            Point targetPoint = new Point(57.769617, 40.929763);
+            Point targetPoint = new Point(currentTest.getTargetLat(), currentTest.getTargetLng());
+            CameraPosition cameraPosition = new CameraPosition(targetPoint, 145.0f, 0.0f, 45.0f);
+            mapView.getMap().move(cameraPosition, new Animation(Animation.Type.SMOOTH, 1), null);
             addTargetMarker(targetPoint);
 
             // 2. Точка пользователя (текущее местоположение)
@@ -364,9 +362,6 @@ public class TaskActivity extends AppCompatActivity {
                     Point userPoint = new Point(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
                     addUserMarker(userPoint);
 
-                    // 3. Показываем расстояние между точками
-                    showDistance(userPoint, targetPoint);
-
                     // 4. Строим маршрут (если есть интернет)
                     if (isNetworkAvailable()) {
                         requestRoute(userPoint, targetPoint);
@@ -375,9 +370,6 @@ public class TaskActivity extends AppCompatActivity {
                     Toast.makeText(this, "Не удалось определить ваше местоположение", Toast.LENGTH_SHORT).show();
                 }
             }
-
-            // 5. Настраиваем камеру, чтобы показать обе точки
-            setupCamera(targetPoint);
 
         } catch (Exception e) {
             Log.e("MAP_INIT", "Error: " + e.getMessage());
@@ -482,26 +474,6 @@ public class TaskActivity extends AppCompatActivity {
         animateMarkerAppearance(userPlacemark, 800);
     }
 
-    private void setupCamera(Point targetPoint) {
-        // Получаем текущую позицию камеры
-        CameraPosition currentCameraPosition = mapView.getMap().getCameraPosition();
-
-        // Создаем новую позицию камеры с центром в целевой точке
-        CameraPosition newCameraPosition = new CameraPosition(
-                targetPoint,
-                15f,  // zoom
-                30f,  // azimuth
-                0f    // tilt
-        );
-
-        // Анимированное перемещение камеры
-        mapView.getMap().move(
-                newCameraPosition,
-                new Animation(Animation.Type.SMOOTH, 1f),
-                null
-        );
-    }
-
     private void animateMarkerAppearance(PlacemarkMapObject marker, long duration) {
         ValueAnimator scaleAnimator = ValueAnimator.ofFloat(0.1f, 1f);
         scaleAnimator.setDuration(duration);
@@ -517,34 +489,23 @@ public class TaskActivity extends AppCompatActivity {
     }
 
     private void startTargetPulsing(PlacemarkMapObject marker) {
+        if (targetPulsingAnimator != null) {
+            targetPulsingAnimator.cancel();
+        }
         ValueAnimator animator = ValueAnimator.ofFloat(1f, 1.2f);
         animator.setDuration(1000);
         animator.setRepeatCount(ValueAnimator.INFINITE);
         animator.setRepeatMode(ValueAnimator.REVERSE);
         animator.addUpdateListener(animation -> {
-            float scale = (float) animation.getAnimatedValue();
-            marker.setIconStyle(new IconStyle()
-                    .setScale(scale)
-                    .setAnchor(new PointF(0.5f, 1.0f))
-            );
+            if (marker != null && marker.isValid()) {  // Проверка перед изменением
+                float scale = (float) animation.getAnimatedValue();
+                marker.setIconStyle(new IconStyle()
+                        .setScale(scale)
+                        .setAnchor(new PointF(0.5f, 1.0f))
+                );
+            }
         });
         animator.start();
-    }
-
-    private void showDistance(Point from, Point to) {
-        float[] results = new float[1];
-        Location.distanceBetween(
-                from.getLatitude(), from.getLongitude(),
-                to.getLatitude(), to.getLongitude(),
-                results
-        );
-
-        String distanceText = String.format(Locale.getDefault(),
-                "До цели: %.1f км", results[0]/1000);
-
-        Snackbar.make(mapView, distanceText, Snackbar.LENGTH_LONG)
-                .setAction("Обновить", v -> initializeMap())
-                .show();
     }
 
     private boolean isNetworkAvailable() {
@@ -773,6 +734,10 @@ public class TaskActivity extends AppCompatActivity {
         super.onDestroy();
         if (mapView != null) {
             mapView = null;
+        }
+        if (targetPulsingAnimator != null) {
+            targetPulsingAnimator.cancel();
+            targetPulsingAnimator = null;
         }
         if (locationNotifier != null) {
             try {
