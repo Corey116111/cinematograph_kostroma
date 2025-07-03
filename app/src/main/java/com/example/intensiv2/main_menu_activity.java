@@ -94,17 +94,6 @@ public class main_menu_activity extends AppCompatActivity {
         );
     }
 
-    public void unlockQuest(View v)
-    {
-        // Разблокируем все квесты
-        QuestStateManager.setQuestPassed(this, TestConstants.TEST_GORKIY, true);
-        QuestStateManager.setQuestPassed(this, TestConstants.TEST_ROMANS, true);
-        QuestStateManager.setQuestPassed(this, TestConstants.TEST_EVIL_PEOPLE, true);
-        QuestStateManager.setFinallyLocked(this, false);
-
-        updateQuestImages();
-    }
-
     public void finally_quest_click(View v)
     {
         boolean finallyLocked = QuestStateManager.isFinallyLocked(this);

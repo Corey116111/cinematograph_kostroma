@@ -39,14 +39,6 @@
             android:contentDescription="Иконка ачивок"
             android:scaleType="fitCenter"
             android:src="@drawable/achievement" />
-
-        <Button
-            android:id="@+id/test_locked"
-            android:onClick="unlockQuest"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Прошел" />
     </LinearLayout>
 
     <TableLayout

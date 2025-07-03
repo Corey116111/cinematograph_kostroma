@@ -8,6 +8,7 @@ import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -27,7 +28,6 @@ public class HistoryBeforeMenu extends AppCompatActivity {
         enableFullscreen();
         setContentView(R.layout.history_before_menu);
         history_before_menu_id_glav = findViewById(R.id.history_before_menu_id_glav);
-
         soundButton = findViewById(R.id.soundButton);
         if (soundButton != null) {
             soundButton.setOnClickListener(v -> {
